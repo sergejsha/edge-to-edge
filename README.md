@@ -43,3 +43,5 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 }
 ```
+
+See sample app for more examples.
