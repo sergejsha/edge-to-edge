@@ -1,7 +1,12 @@
 # 🌖 Edge-to-Edge 
-Android library for controlling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple DSL
+Android library for enabling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple DSL
 
-# How
+# Why?
+* Based on **standard Android** [WindowInsets](https://developer.android.com/reference/android/view/WindowInsets).
+* Easy to read and write **declarative DSL** helping to focus on "what to do" instead of "how to do".
+* **No custom widgets**, the DSL works for all type of standard widgets.
+
+# How?
 
 1. Remove `android:fitSystemWindows` attrobute everywhere from layouts, if present.
 2. Configure transparent colors of the status and navigation bars in `res/values/styles.xml` by extending a theme without the action bar like `Theme.MaterialComponents.Light.NoActionBar` or `Theme.Design.Light.NoActionBar` or similar.
