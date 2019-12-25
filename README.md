@@ -3,7 +3,7 @@ Android library for controlling edge-to-edge content and insetting views using s
 
 # How
 
-1. Configure transparent colors of the status and navigation bars in `res/themes.xml`.
+1. Configure transparent colors of the status and navigation bars in `res/values/styles.xml`.
 
 ```xml
 <resources>
@@ -21,7 +21,7 @@ Android library for controlling edge-to-edge content and insetting views using s
 </resources>
 ```
 
-2. Enable edge-to-edge content flags in the Activity.
+2. Enable edge-to-edge content in the Activity.
 
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
