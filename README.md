@@ -8,7 +8,7 @@ Android library for enabling [edge-to-edge content](https://developer.android.co
 * **No custom widgets**, the DSL can be applied to any widget.
 * **Common approach** to all app screens. The Sample app shows different usage scenarios.
 
-# How?
+# Getting Started
 
 1. Remove `android:fitSystemWindows` attribute everywhere from layouts, if present.
 2. Configure transparent colors of the status and navigation bars in `res/values/styles.xml` by extending a theme without the action bar like `Theme.MaterialComponents.Light.NoActionBar` or `Theme.Design.Light.NoActionBar` or similar.
