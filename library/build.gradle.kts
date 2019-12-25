@@ -3,7 +3,7 @@ plugins {
     id("kotlin-android")
     `maven-publish`
     id("org.gradle.signing")
-    id("org.jetbrains.dokka") version "0.10.0"
+    id("org.jetbrains.dokka") version Version.dokka
 }
 
 android {
@@ -12,7 +12,7 @@ android {
         minSdkVersion(21)
         targetSdkVersion(29)
         versionCode = 1
-        versionName = "1.0"
+        versionName = Pom.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,11 +23,8 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61")
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("androidx.test.ext:junit:1.1.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.1")
+    implementation(Libraries.stdlib)
+    implementation(Libraries.appCompat)
 }
 
 publishing {
@@ -38,8 +35,8 @@ publishing {
             url = uri("$buildDir/repository")
         }
         maven {
-            name = "central"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+            name = Pom.MavenCentral.name
+            url = uri(Pom.MavenCentral.url)
             credentials {
                 username = project.getNexusUser()
                 password = project.getNexusPassword()
@@ -64,36 +61,35 @@ publishing {
 
     publications {
         create("Release", MavenPublication::class) {
-
-            group = "de.halfbit"
-            artifactId = "edge-to-edge"
-            version = "0.1"
+            group = Pom.group
+            artifactId = Pom.artifactId
+            version = Pom.version
 
             artifact(sourcesJar)
             artifact(javadocJar)
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
 
             pom {
-                name.set("Edge-to-Edge")
-                description.set("Android library for enabling edge-to-edge content and insetting views using simple Kotlin DSL")
-                url.set("http://www.halfbit.de")
+                url.set(Pom.url)
+                name.set(Pom.name)
+                description.set(Pom.description)
                 licenses {
                     license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        name.set(Pom.License.name)
+                        url.set(Pom.License.url)
                     }
                 }
                 developers {
                     developer {
-                        id.set("beworker")
-                        name.set("Sergej Shafarenka")
-                        email.set("info@halfbit.de")
+                        id.set(Pom.Developer.id)
+                        name.set(Pom.Developer.name)
+                        email.set(Pom.Developer.email)
                     }
                 }
                 scm {
-                    connection.set("https://github.com/beworker/knot")
-                    developerConnection.set("scm:git:ssh://github.com:beworker/knot.git")
-                    url.set("https://github.com/beworker/knot")
+                    url.set(Pom.Github.url)
+                    connection.set(Pom.Github.url)
+                    developerConnection.set(Pom.Github.cloneUrl)
                 }
             }
         }
