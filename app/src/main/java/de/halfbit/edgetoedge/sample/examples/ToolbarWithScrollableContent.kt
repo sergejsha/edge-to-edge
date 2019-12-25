@@ -46,7 +46,7 @@ class ImageAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
         ItemViewHolder(
             itemView = LayoutInflater.from(parent.context).inflate(
-                R.layout.fragment_toolbar_with_scrollable_content_item, parent, false
+                R.layout.item_imageview, parent, false
             ),
             requestManager = requestManager
         )
