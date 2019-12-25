@@ -4,7 +4,7 @@ Android library for controlling [edge-to-edge content](https://developer.android
 # How
 
 1. Remove `android:fitSystemWindows` attrobute everywhere from layouts, if present.
-2. Configure transparent colors of the status and navigation bars in `res/values/styles.xml`.
+2. Configure transparent colors of the status and navigation bars in `res/values/styles.xml` by extending a theme without the action bar like `Theme.MaterialComponents.Light.NoActionBar` or `Theme.Design.Light.NoActionBar` or similar.
 
 ```xml
 <resources>
