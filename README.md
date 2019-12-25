@@ -3,7 +3,8 @@ Android library for controlling [edge-to-edge content](https://developer.android
 
 # How
 
-1. Configure transparent colors of the status and navigation bars in `res/values/styles.xml`.
+1. Remove `android:fitSystemWindows` attrobute everywhere from layouts, if present.
+2. Configure transparent colors of the status and navigation bars in `res/values/styles.xml`.
 
 ```xml
 <resources>
@@ -21,7 +22,7 @@ Android library for controlling [edge-to-edge content](https://developer.android
 </resources>
 ```
 
-2. Enable edge-to-edge window for the Activity.
+3. Enable edge-to-edge window for the Activity.
 
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 }
 ```
 
-3. Fit top and bottom views of each fragment as UI design requires.
+4. Fit top and bottom views of each fragment as UI design requires.
 
 ```kotlin
 override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
