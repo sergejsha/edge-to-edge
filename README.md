@@ -41,6 +41,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         appbar.fit { Edge.Top }
         recycler.fit { Edge.Bottom }
     }
+    ...
 }
 ```
 
