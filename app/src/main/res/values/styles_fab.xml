@@ -1,0 +1,6 @@
+<resources>
+
+    <style name="AppWidget.Fab" parent="Widget.Design.FloatingActionButton">
+        <item name="android:tint">@color/colorOnSecondary</item>
+    </style>
+</resources>

@@ -28,6 +28,7 @@ dependencies {
     implementation("com.google.android.material:material:1.1.0-beta02")
     implementation("androidx.core:core-ktx:1.0.2")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("com.github.bumptech.glide:glide:4.10.0")
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test.ext:junit:1.1.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.1.1")

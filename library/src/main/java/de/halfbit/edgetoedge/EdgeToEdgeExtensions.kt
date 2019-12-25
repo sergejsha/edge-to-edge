@@ -15,11 +15,11 @@ inline fun View.edgeToEdge(block: EdgeToEdge.() -> Unit) {
     EdgeToEdge(this).also(block).build()
 }
 
-fun Activity.enableEdgeToEdge() {
+fun Activity.enableEdgeToEdgeWindow() {
     window.enableEdgeToEdge()
 }
 
-fun Dialog.enableEdgeToEdge() {
+fun Dialog.enableEdgeToEdgeWindow() {
     requireNotNull(window) { "Dialog must be attached to the Window" }.enableEdgeToEdge()
 }
 

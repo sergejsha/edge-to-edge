@@ -2,7 +2,7 @@ package de.halfbit.edgetoedge.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import de.halfbit.edgetoedge.enableEdgeToEdge
+import de.halfbit.edgetoedge.enableEdgeToEdgeWindow
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +14,6 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.container, MainFragment())
                 .commit()
         }
-        enableEdgeToEdge()
+        enableEdgeToEdgeWindow()
     }
 }

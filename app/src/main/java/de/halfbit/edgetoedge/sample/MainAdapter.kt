@@ -8,19 +8,24 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import de.halfbit.edgetoedge.sample.examples.SplashScreenFragment
+import de.halfbit.edgetoedge.sample.examples.ToolbarWithScrollableContent
+import de.halfbit.edgetoedge.sample.examples.ToolbarWithScrollableContentAndFab
 
 class MainAdapter(private val onItemClicked: OnItemClicked) :
     RecyclerView.Adapter<ItemViewHolder>() {
 
     private var items = listOf(
-        Item(R.string.splash) { SplashScreenFragment() }
+        Item(R.string.splash) { SplashScreenFragment() },
+        Item(R.string.toolbar) { ToolbarWithScrollableContent() },
+        Item(R.string.toolbar_fab) { ToolbarWithScrollableContentAndFab() }
     )
 
     override fun getItemCount(): Int = items.size
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
         ItemViewHolder(
-            itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_main_item, parent, false),
+            itemView = LayoutInflater.from(parent.context).inflate(
+                R.layout.fragment_main_item, parent, false
+            ),
             onItemClicked = onItemClicked
         )
 

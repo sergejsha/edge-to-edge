@@ -1,16 +1,22 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:statusBarColor">@color/statusBar</item>
         <item name="android:navigationBarColor">@color/navigationBar</item>
+
+        <item name="snackbarStyle">@style/AppWidget.Snackbar</item>
+        <item name="floatingActionButtonStyle">@style/AppWidget.Fab</item>
     </style>
+
+    <style name="AppWidget" />
 
 </resources>

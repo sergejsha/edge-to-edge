@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import de.halfbit.edgetoedge.Edge
 import de.halfbit.edgetoedge.edgeToEdge
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -20,6 +21,7 @@ class MainFragment : BaseFragment() {
             recycler.fit { Edge.Bottom }
         }
 
+        recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         recycler.adapter = MainAdapter { createFragment ->
             requireActivity()
                 .supportFragmentManager
