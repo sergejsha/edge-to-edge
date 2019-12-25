@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Edge-to-Edge</string>
+    <string name="splash">Splash screen</string>
+    <string name="splash_text">Edge-to-Edge splash screen example.</string>
 </resources>

@@ -4,26 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import de.halfbit.edgetoedge.sample.examples.SplashScreenFragment
 
-class MainAdapter(val onItemClicked: OnItemClicked) : RecyclerView.Adapter<ItemViewHolder>() {
+class MainAdapter(private val onItemClicked: OnItemClicked) :
+    RecyclerView.Adapter<ItemViewHolder>() {
 
     private var items = listOf(
-        Item("Option 1") { MainFragment() },
-        Item("Option 2") { MainFragment() },
-        Item("Option 3") { MainFragment() },
-        Item("Option 4") { MainFragment() },
-        Item("Option 5") { MainFragment() },
-        Item("Option 6") { MainFragment() },
-        Item("Option 7") { MainFragment() },
-        Item("Option 8") { MainFragment() },
-        Item("Option 9") { MainFragment() },
-        Item("Option 10") { MainFragment() },
-        Item("Option 11") { MainFragment() },
-        Item("Option 12") { MainFragment() },
-        Item("Option 13") { MainFragment() },
-        Item("Option 14") { MainFragment() }
+        Item(R.string.splash) { SplashScreenFragment() }
     )
 
     override fun getItemCount(): Int = items.size
@@ -40,7 +30,7 @@ class MainAdapter(val onItemClicked: OnItemClicked) : RecyclerView.Adapter<ItemV
 }
 
 class Item(
-    val name: String,
+    @StringRes val nameId: Int,
     val factory: FragmentFactory
 )
 
@@ -49,7 +39,7 @@ class ItemViewHolder(
 ) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: Item) {
         val textView = itemView as TextView
-        textView.text = item.name
+        textView.setText(item.nameId)
         textView.setOnClickListener { onItemClicked(item.factory) }
     }
 }

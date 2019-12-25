@@ -9,11 +9,8 @@ import de.halfbit.edgetoedge.Edge
 import de.halfbit.edgetoedge.edgeToEdge
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_main, container, false)
+class MainFragment : BaseFragment() {
+    override val layoutId: Int get() = R.layout.fragment_main
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,4 +29,13 @@ class MainFragment : Fragment() {
                 .commit()
         }
     }
+}
+
+abstract class BaseFragment : Fragment() {
+
+    protected abstract val layoutId: Int
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = inflater.inflate(layoutId, container, false)
 }
