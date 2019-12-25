@@ -21,7 +21,7 @@ Android library for controlling edge-to-edge content and insetting views using s
 </resources>
 ```
 
-2. Enable edge-to-edge content in the Activity.
+2. Enable edge-to-edge window flags in the Activity.
 
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
