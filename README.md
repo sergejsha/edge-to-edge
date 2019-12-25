@@ -3,7 +3,7 @@ Android library for enabling [edge-to-edge content](https://developer.android.co
 
 # Why?
 * Based on **standard Android** [WindowInsets](https://developer.android.com/reference/android/view/WindowInsets).
-* **Simple DSL** hiding complexify in the implementation.
+* **Simple DSL** hiding complexify behind the implementation.
 * **Declarative DSL** helping to focus on "what to do" instead of "how to do".
 * **No custom widgets**, the DSL can be applied to any widget.
 * **Common approach** to all app screens. The Sample app shows different usage scenarios.
