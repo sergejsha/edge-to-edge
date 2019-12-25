@@ -1,5 +1,5 @@
 # 🌖 Edge-to-Edge 
-Android library for enabling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple DSL
+Android library for enabling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple Kotlin DSL.
 
 # Why?
 * Based on **standard Android** [WindowInsets](https://developer.android.com/reference/android/view/WindowInsets).
