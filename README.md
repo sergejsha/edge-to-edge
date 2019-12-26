@@ -1,5 +1,4 @@
 [![Maven Central](http://img.shields.io/maven-central/v/de.halfbit/edge-to-edge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.halfbit%22%20a%3A%22edge-to-edge%22)
-![](https://img.shields.io/badge/production-ready-brightgreen.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 # 🌖 Edge-to-Edge 
@@ -10,7 +9,7 @@ Android library for enabling [edge-to-edge content](https://developer.android.co
 * **Simple DSL** hiding complexify behind the implementation.
 * **Declarative DSL** helping to focus on "what to do" instead of "how to do".
 * **No custom widgets**, the DSL can be applied to any widget.
-* **Common approach** to all app screens. The Sample app shows different usage scenarios.
+* **Common approach** for all application screens. The Sample app shows different usage scenarios.
 
 # Getting Started
 
@@ -60,12 +59,29 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 See sample app for more examples.
 
 # Download
-```
-gradlerepositories {
+```gradle
+repositories {
     mavenCentral()
 }
 dependencies {
     implementation 'de.halfbit:edge-to-edge:<version>'
 }
 
+```
+
+# License
+```
+Copyright 2020 Sergej Shafarenka, www.halfbit.de
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
