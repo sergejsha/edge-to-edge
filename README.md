@@ -61,7 +61,7 @@ See sample app for more examples.
 
 # Download
 ```gradle
-gradlerepositories {
+repositories {
     mavenCentral()
 }
 dependencies {
