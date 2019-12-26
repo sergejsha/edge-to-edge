@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_toolbar_with_viewpager.*
 import kotlinx.android.synthetic.main.fragment_toolbar_with_viewpager_page.*
 import kotlinx.android.synthetic.main.fragment_toolbar_with_viewpager_page.container as page
 
-class ViewpagerFragment : BaseFragment() {
+class ToolbarWithViewpagerFragment : BaseFragment() {
     override val layoutId: Int get() = R.layout.fragment_toolbar_with_viewpager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
