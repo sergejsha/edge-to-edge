@@ -1,3 +1,7 @@
+[![Maven Central](http://img.shields.io/maven-central/v/de.halfbit/edge-to-edge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.halfbit%22%20a%3A%22edge-to-edge%22)
+![](https://img.shields.io/badge/production-ready-brightgreen.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 # 🌖 Edge-to-Edge 
 Android library for enabling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple Kotlin DSL.
 
