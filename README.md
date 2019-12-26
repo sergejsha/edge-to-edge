@@ -9,7 +9,7 @@ Android library for enabling [edge-to-edge content](https://developer.android.co
 * **Simple DSL** hiding complexify behind the implementation.
 * **Declarative DSL** helping to focus on "what to do" instead of "how to do".
 * **No custom widgets**, the DSL can be applied to any widget.
-* **Common approach** to all app screens. The Sample app shows different usage scenarios.
+* **Common approach** for all application screens. The Sample app shows different usage scenarios.
 
 # Getting Started
 
