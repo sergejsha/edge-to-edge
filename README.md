@@ -58,3 +58,14 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 ```
 
 See sample app for more examples.
+
+# Download
+```
+gradlerepositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'de.halfbit:edge-to-edge:<version>'
+}
+
+```
