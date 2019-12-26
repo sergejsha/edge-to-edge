@@ -2,15 +2,15 @@ package de.halfbit.edgetoedge.sample.examples
 
 import android.os.Bundle
 import android.view.View
-import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import de.halfbit.edgetoedge.Edge
 import de.halfbit.edgetoedge.edgeToEdge
 import de.halfbit.edgetoedge.sample.BaseFragment
 import de.halfbit.edgetoedge.sample.R
+import de.halfbit.edgetoedge.sample.commons.ImagesAdapter
 import kotlinx.android.synthetic.main.fragment_toolbar_with_scrollable_content_and_fab.*
 
-class ToolbarWithScrollableContentAndFab : BaseFragment() {
+class ToolbarWithScrollableContentAndFabFragment : BaseFragment() {
 
     override val layoutId: Int get() = R.layout.fragment_toolbar_with_scrollable_content_and_fab
 
@@ -27,6 +27,6 @@ class ToolbarWithScrollableContentAndFab : BaseFragment() {
             Snackbar.make(container, "Kaboom!", Snackbar.LENGTH_LONG).show()
         }
 
-        recycler.adapter = ImageAdapter(Glide.with(requireActivity()))
+        recycler.adapter = ImagesAdapter(requireContext())
     }
 }

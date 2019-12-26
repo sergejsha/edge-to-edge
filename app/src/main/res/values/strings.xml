@@ -4,4 +4,7 @@
     <string name="splash_text">Edge-to-Edge splash screen example.</string>
     <string name="toolbar">Toolbar + RecyclerView in ConstraintLayout</string>
     <string name="toolbar_fab">Toolbar + RecyclerView + FAB in CoordinatorLayout</string>
+    <string name="toolbar_viewpager">Toolbar + ViewPager in ConstraintLayout</string>
+    <string name="top_text">Top text</string>
+    <string name="bottom_text">Bottom text</string>
 </resources>

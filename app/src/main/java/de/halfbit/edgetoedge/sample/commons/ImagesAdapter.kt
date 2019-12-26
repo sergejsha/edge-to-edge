@@ -1,6 +1,6 @@
-package de.halfbit.edgetoedge.sample.examples
+package de.halfbit.edgetoedge.sample.commons
 
-import android.os.Bundle
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,29 +8,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import de.halfbit.edgetoedge.Edge
-import de.halfbit.edgetoedge.edgeToEdge
-import de.halfbit.edgetoedge.sample.BaseFragment
 import de.halfbit.edgetoedge.sample.R
-import kotlinx.android.synthetic.main.fragment_toolbar_with_scrollable_content.*
 
-class ToolbarWithScrollableContent : BaseFragment() {
-    override val layoutId: Int get() = R.layout.fragment_toolbar_with_scrollable_content
+class ImagesAdapter(context: Context) : RecyclerView.Adapter<ItemViewHolder>() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        edgeToEdge {
-            appbar.fit { Edge.Top }
-            recycler.fit { Edge.Bottom }
-        }
-
-        recycler.adapter = ImageAdapter(Glide.with(requireActivity()))
-    }
-}
-
-class ImageAdapter(
-    private val requestManager: RequestManager
-) : RecyclerView.Adapter<ItemViewHolder>() {
+    private val requestManager: RequestManager = Glide.with(context)
 
     // All great pictures are referenced from https://unsplash.com/
     private var items = listOf(

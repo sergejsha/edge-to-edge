@@ -20,13 +20,15 @@ class EdgeToEdge(
     fun View.fit(block: FittingBuilder.() -> Edge) {
         FittingBuilder(
             adjustment = if (this is Space) Adjustment.Height else Adjustment.Padding,
-            clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null
+            clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null,
+            consumeInsets = true
         ).also {
             fittings += Fitting(
                 view = this,
                 adjustment = it.adjustment,
                 edge = block(it),
-                clipToPadding = it.clipToPadding
+                clipToPadding = it.clipToPadding,
+                consumeInsets = it.consumeInsets
             )
         }
     }
@@ -40,7 +42,7 @@ class EdgeToEdge(
                 with(fitting) {
                     when (edge) {
                         Edge.Top -> {
-                            consumeTop = true
+                            consumeTop = consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding ->
                                     view.applyTopInsetAsPadding(padding, insets)
@@ -49,7 +51,7 @@ class EdgeToEdge(
                             }
                         }
                         Edge.Bottom -> {
-                            consumeBottom = true
+                            consumeBottom = consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding ->
                                     view.applyBottomInsetAsPadding(padding, insets)
@@ -58,8 +60,8 @@ class EdgeToEdge(
                             }
                         }
                         Edge.TopBottom -> {
-                            consumeTop = true
-                            consumeBottom = true
+                            consumeTop = consumeInsets
+                            consumeBottom = consumeInsets
                             when (fitting.adjustment) {
                                 Adjustment.Padding ->
                                     view.applyTopAndBottomInsetsAsPadding(padding, insets)
@@ -117,7 +119,8 @@ class EdgeToEdge(
 @EdgeToEdgeDsl
 class FittingBuilder(
     var adjustment: Adjustment,
-    var clipToPadding: Boolean?
+    var clipToPadding: Boolean?,
+    var consumeInsets: Boolean
 )
 
 sealed class Edge {
@@ -133,7 +136,8 @@ internal data class Fitting(
     val view: View,
     val adjustment: Adjustment,
     val edge: Edge,
-    val clipToPadding: Boolean?
+    val clipToPadding: Boolean?,
+    val consumeInsets: Boolean
 ) {
     lateinit var padding: Rect
 }
