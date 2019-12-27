@@ -6,8 +6,7 @@ Android library for enabling [edge-to-edge content](https://developer.android.co
 
 # Getting Started
 
-1. Remove `android:fitSystemWindows` attribute everywhere from layouts, if present.
-2. Configure transparent colors of the status and navigation bars in `res/values/styles.xml` by extending a theme without the action bar like `Theme.MaterialComponents.Light.NoActionBar` or `Theme.Design.Light.NoActionBar` or similar.
+1. Configure transparent colors of the status and navigation bars in `res/values/styles.xml` by extending a theme without the action bar like `Theme.MaterialComponents.Light.NoActionBar` or `Theme.Design.Light.NoActionBar` or similar.
 
 ```xml
 <resources>
@@ -25,18 +24,8 @@ Android library for enabling [edge-to-edge content](https://developer.android.co
 </resources>
 ```
 
-3. Enable edge-to-edge window for the Activity.
-
-```kotlin
-override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    enableEdgeToEdge()
-    ...    
-}
-```
-
-4. Fit top and bottom views of each fragment as UI design requires.
+2. Remove `android:fitSystemWindows` attribute everywhere from layouts, if present.
+3. Fit top and bottom views of each fragment as required.
 
 ```kotlin
 override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
