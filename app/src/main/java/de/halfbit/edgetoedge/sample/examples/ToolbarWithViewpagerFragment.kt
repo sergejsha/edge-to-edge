@@ -37,10 +37,7 @@ class PageFragment : BaseFragment() {
         indexText.text = (index + 1).toString()
 
         edgeToEdge {
-            bottomText.fit {
-                consumeInsets = false
-                Edge.Bottom
-            }
+            bottomText.fit { Edge.Bottom }
         }
     }
 

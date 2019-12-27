@@ -1,6 +1,5 @@
 package de.halfbit.edgetoedge
 
-import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Space
@@ -21,7 +20,7 @@ class EdgeToEdge(
         FittingBuilder(
             adjustment = if (this is Space) Adjustment.Height else Adjustment.Padding,
             clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null,
-            consumeInsets = true
+            consumeInsets = false
         ).also {
             fittings += Fitting(
                 view = this,
@@ -44,27 +43,25 @@ class EdgeToEdge(
                         Edge.Top -> {
                             consumeTop = consumeInsets
                             when (adjustment) {
-                                Adjustment.Padding ->
-                                    view.applyTopInsetAsPadding(padding, insets)
-                                Adjustment.Height ->
-                                    view.applyTopInsetAsHeight(insets)
+                                Adjustment.Padding -> applyTopInsetAsPadding(insets)
+                                Adjustment.Margin -> applyTopInsetAsMargin(insets)
+                                Adjustment.Height -> applyTopInsetAsHeight(insets)
                             }
                         }
                         Edge.Bottom -> {
                             consumeBottom = consumeInsets
                             when (adjustment) {
-                                Adjustment.Padding ->
-                                    view.applyBottomInsetAsPadding(padding, insets)
-                                Adjustment.Height ->
-                                    view.applyBottomInsetAsHeight(insets)
+                                Adjustment.Padding -> applyBottomInsetAsPadding(insets)
+                                Adjustment.Margin -> applyBottomInsetAsMargin(insets)
+                                Adjustment.Height -> applyBottomInsetAsHeight(insets)
                             }
                         }
                         Edge.TopBottom -> {
                             consumeTop = consumeInsets
                             consumeBottom = consumeInsets
                             when (fitting.adjustment) {
-                                Adjustment.Padding ->
-                                    view.applyTopAndBottomInsetsAsPadding(padding, insets)
+                                Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets)
+                                Adjustment.Margin -> applyTopAndBottomInsetAsMargin(insets)
                                 Adjustment.Height -> error(
                                     "Height adjustment can only be used either Top or Bottom."
                                 )
@@ -73,12 +70,15 @@ class EdgeToEdge(
                     }
                 }
             }
-            insets.replaceSystemWindowInsets(
-                insets.systemWindowInsetLeft,
-                if (consumeTop) 0 else insets.systemWindowInsetTop,
-                insets.systemWindowInsetRight,
-                if (consumeBottom) 0 else insets.systemWindowInsetBottom
-            )
+
+            if (consumeTop || consumeBottom) {
+                insets.replaceSystemWindowInsets(
+                    insets.systemWindowInsetLeft,
+                    if (consumeTop) 0 else insets.systemWindowInsetTop,
+                    insets.systemWindowInsetRight,
+                    if (consumeBottom) 0 else insets.systemWindowInsetBottom
+                )
+            } else insets
         }
     }
 
@@ -93,24 +93,26 @@ class EdgeToEdge(
                     }
                     view.clipToPadding = it
                 }
-                padding = Rect(
-                    view.paddingLeft,
-                    view.paddingTop,
-                    view.paddingRight,
-                    view.paddingBottom
-                )
+
+                paddingTop = view.paddingTop
+                paddingBottom = view.paddingBottom
+
+                val layoutMargin = view.layoutParams as? ViewGroup.MarginLayoutParams
+                layoutMargin?.let {
+                    marginTop = it.topMargin
+                    marginBottom = it.bottomMargin
+                }
             }
         }
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets -> block(insets) }
         if (isAttachedToWindow) ViewCompat.requestApplyInsets(this)
         else addOnAttachStateChangeListener(
             object : View.OnAttachStateChangeListener {
+                override fun onViewDetachedFromWindow(view: View) {}
                 override fun onViewAttachedToWindow(view: View) {
                     view.removeOnAttachStateChangeListener(this)
                     ViewCompat.requestApplyInsets(view)
                 }
-
-                override fun onViewDetachedFromWindow(view: View) = Unit
             }
         )
     }
@@ -125,6 +127,7 @@ class FittingBuilder(
 
 sealed class Edge {
     object Top : Edge() {
+        @Suppress("UNUSED_PARAMETER")
         operator fun plus(bottom: Bottom): Edge = TopBottom
     }
 
@@ -139,52 +142,81 @@ internal data class Fitting(
     val clipToPadding: Boolean?,
     val consumeInsets: Boolean
 ) {
-    lateinit var padding: Rect
+    var paddingTop: Int = 0
+    var paddingBottom: Int = 0
+    var marginTop: Int = 0
+    var marginBottom: Int = 0
 }
 
-enum class Adjustment { Padding, Height }
+enum class Adjustment { Padding, Margin, Height }
 
-private fun View.applyTopInsetAsPadding(padding: Rect, insets: WindowInsetsCompat) {
-    setPadding(
-        padding.left,
-        padding.top + insets.systemWindowInsetTop,
-        padding.right,
-        padding.bottom
+private fun Fitting.applyTopInsetAsPadding(insets: WindowInsetsCompat) {
+    val top = paddingTop + insets.systemWindowInsetTop
+    if (view.paddingTop != top) view.setPadding(
+        view.paddingLeft, top, view.paddingRight, view.paddingBottom
     )
 }
 
-private fun View.applyBottomInsetAsPadding(padding: Rect, insets: WindowInsetsCompat) {
-    setPadding(
-        padding.left,
-        padding.top,
-        padding.right,
-        padding.bottom + insets.systemWindowInsetBottom
+private fun Fitting.applyBottomInsetAsPadding(insets: WindowInsetsCompat) {
+    val bottom = paddingBottom + insets.systemWindowInsetBottom
+    if (view.paddingBottom != bottom) view.setPadding(
+        view.paddingLeft, view.paddingTop, view.paddingRight, bottom
     )
 }
 
-private fun View.applyTopAndBottomInsetsAsPadding(padding: Rect, insets: WindowInsetsCompat) {
-    setPadding(
-        padding.left,
-        padding.top + insets.systemWindowInsetTop,
-        padding.right,
-        padding.bottom + insets.systemWindowInsetBottom
+private fun Fitting.applyTopAndBottomInsetsAsPadding(insets: WindowInsetsCompat) {
+    val top = paddingTop + insets.systemWindowInsetTop
+    val bottom = paddingBottom + insets.systemWindowInsetBottom
+    if (view.paddingTop != top || view.paddingBottom != bottom) view.setPadding(
+        view.paddingLeft, top, view.paddingRight, bottom
     )
 }
 
-private fun View.applyTopInsetAsHeight(insets: WindowInsetsCompat) {
-    if (height != insets.systemWindowInsetTop) {
-        val params = this.layoutParams
-        params.height = View.MeasureSpec
-            .makeMeasureSpec(insets.systemWindowInsetTop, View.MeasureSpec.EXACTLY)
-        this.layoutParams = params
+private fun Fitting.applyTopInsetAsMargin(insets: WindowInsetsCompat) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    val top = marginTop + insets.systemWindowInsetTop
+    if (top != layoutParams.topMargin) {
+        layoutParams.topMargin = top
+        view.layoutParams = layoutParams
     }
 }
 
-private fun View.applyBottomInsetAsHeight(insets: WindowInsetsCompat) {
-    if (height != insets.systemWindowInsetBottom) {
-        val params = this.layoutParams
-        params.height = View.MeasureSpec
-            .makeMeasureSpec(insets.systemWindowInsetBottom, View.MeasureSpec.EXACTLY)
-        this.layoutParams = params
+private fun Fitting.applyBottomInsetAsMargin(insets: WindowInsetsCompat) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    val bottom = marginBottom + insets.systemWindowInsetBottom
+    if (bottom != layoutParams.bottomMargin) {
+        layoutParams.bottomMargin = bottom
+        view.layoutParams = layoutParams
+    }
+}
+
+private fun Fitting.applyTopAndBottomInsetAsMargin(insets: WindowInsetsCompat) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    val top = marginTop + insets.systemWindowInsetTop
+    val bottom = marginBottom + insets.systemWindowInsetBottom
+    if (top != layoutParams.topMargin || bottom != layoutParams.bottomMargin) {
+        layoutParams.topMargin = top
+        layoutParams.bottomMargin = bottom
+        view.layoutParams = layoutParams
+    }
+}
+
+private fun Fitting.applyTopInsetAsHeight(insets: WindowInsetsCompat) {
+    if (view.height != insets.systemWindowInsetTop) {
+        val layoutParams = view.layoutParams
+        layoutParams.height = View.MeasureSpec.makeMeasureSpec(
+            insets.systemWindowInsetTop, View.MeasureSpec.EXACTLY
+        )
+        view.layoutParams = layoutParams
+    }
+}
+
+private fun Fitting.applyBottomInsetAsHeight(insets: WindowInsetsCompat) {
+    if (view.height != insets.systemWindowInsetBottom) {
+        val layoutParams = view.layoutParams
+        layoutParams.height = View.MeasureSpec.makeMeasureSpec(
+            insets.systemWindowInsetBottom, View.MeasureSpec.EXACTLY
+        )
+        view.layoutParams = layoutParams
     }
 }
