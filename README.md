@@ -4,13 +4,6 @@
 # 🌖 Edge-to-Edge 
 Android library for enabling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple Kotlin DSL.
 
-# Why?
-* Based on **standard Android** [WindowInsets](https://developer.android.com/reference/android/view/WindowInsets).
-* **Simple DSL** hiding complexify behind the implementation.
-* **Declarative DSL** helping to focus on "what to do" instead of "how to do".
-* **No custom widgets**, the DSL can be applied to any widget.
-* **Common approach** for all application screens. The Sample app shows different usage scenarios.
-
 # Getting Started
 
 1. Remove `android:fitSystemWindows` attribute everywhere from layouts, if present.
