@@ -1,4 +1,4 @@
-# Unreleased
+# 0.3 (27.12.2019)
 * Edge-to-Edge system window flags are set automatically.
 * New `fit { adjustment = Adjustment.Margin }`.
 * Insets are not consumed by default, but can be consumed by setting `fit { consumeInsets = true }`.
@@ -7,6 +7,6 @@
 * New property `fit { consumeInsets: Boolean }` for suppressing insets consumption.
 * New `Toolbar + ViewPager in ConstraintLayout` sample screen.
 
-# 0.1 
+# 0.1 (26.12.2019)
 * Initial release
 
