@@ -2,31 +2,20 @@ package de.halfbit.edgetoedge
 
 import android.app.Activity
 import android.app.Dialog
-import android.view.View
-import android.view.Window
 import androidx.fragment.app.Fragment
 
 inline fun Fragment.edgeToEdge(block: EdgeToEdge.() -> Unit) {
     val rootView = requireNotNull(view) { "fragment.view must not be null, fragment: $this" }
-    EdgeToEdge(rootView).also(block).build()
+    val window = requireNotNull(activity?.window) { "fragment's activity must be not null" }
+    EdgeToEdge(rootView, window).also(block).build()
 }
 
-inline fun View.edgeToEdge(block: EdgeToEdge.() -> Unit) {
-    EdgeToEdge(this).also(block).build()
+inline fun Dialog.edgeToEdge(block: EdgeToEdge.() -> Unit) {
+    val window = requireNotNull(window) { "Dialog's window must be not null" }
+    EdgeToEdge(window.decorView, window).also(block).build()
 }
 
-fun Activity.enableEdgeToEdgeWindow() {
-    window.enableEdgeToEdge()
-}
-
-fun Dialog.enableEdgeToEdgeWindow() {
-    requireNotNull(window) { "Dialog must be attached to the Window" }.enableEdgeToEdge()
-}
-
-private fun Window.enableEdgeToEdge() {
-    with(decorView) {
-        systemUiVisibility = systemUiVisibility or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-    }
+inline fun Activity.edgeToEdge(block: EdgeToEdge.() -> Unit) {
+    val window = requireNotNull(window) { "Dialog's window must be not null" }
+    EdgeToEdge(window.decorView, window).also(block).build()
 }

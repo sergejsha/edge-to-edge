@@ -56,7 +56,7 @@ class PageFragment : BaseFragment() {
 private class PagesAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     private val colors = listOf(
-        "#C5CAE9", "#E1BEE7", "#C5CAE9", "#DCEDC8", "#FFE0B2"
+        "#FFE0B2", "#E1BEE7", "#C5CAE9", "#DCEDC8", "#B3E5FC"
     )
 
     override fun getItemCount(): Int = 5

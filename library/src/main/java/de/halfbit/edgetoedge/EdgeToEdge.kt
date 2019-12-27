@@ -2,6 +2,7 @@ package de.halfbit.edgetoedge
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Space
 import androidx.core.view.ScrollingView
 import androidx.core.view.ViewCompat
@@ -12,7 +13,8 @@ annotation class EdgeToEdgeDsl
 
 @EdgeToEdgeDsl
 class EdgeToEdge(
-    private val rootView: View
+    private val rootView: View,
+    private val window: Window
 ) {
     private val fittings: MutableList<Fitting> = mutableListOf()
 
@@ -34,6 +36,11 @@ class EdgeToEdge(
 
     @PublishedApi
     internal fun build() {
+        if (rootView.getTag(R.id.edgetoedge) == null) {
+            window.enableEdgeToEdge()
+            rootView.setTag(R.id.edgetoedge, Unit)
+        }
+
         rootView.onApplyWindowInsets { insets ->
             var consumeTop = false
             var consumeBottom = false
@@ -218,5 +225,13 @@ private fun Fitting.applyBottomInsetAsHeight(insets: WindowInsetsCompat) {
             insets.systemWindowInsetBottom, View.MeasureSpec.EXACTLY
         )
         view.layoutParams = layoutParams
+    }
+}
+
+private fun Window.enableEdgeToEdge() {
+    with(decorView) {
+        systemUiVisibility = systemUiVisibility or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 }
