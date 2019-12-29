@@ -51,6 +51,9 @@ dependencies {
 
 ```
 
+# See also
+* [Insetter](https://github.com/chrisbanes/insetter)
+
 # License
 ```
 Copyright 2020 Sergej Shafarenka, www.halfbit.de
