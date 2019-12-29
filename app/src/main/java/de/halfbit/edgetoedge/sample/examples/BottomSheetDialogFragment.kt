@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import de.halfbit.edgetoedge.Edge
 import de.halfbit.edgetoedge.edgeToEdge
-import de.halfbit.edgetoedge.requireWindow
 import de.halfbit.edgetoedge.sample.BaseFragment
 import de.halfbit.edgetoedge.sample.R
 import de.halfbit.edgetoedge.setEdgeToEdgeFlags
@@ -60,7 +59,7 @@ class BSDFragment : MaterialBSDFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.requireWindow().setEdgeToEdgeFlags()
+        requireNotNull(dialog.window).setEdgeToEdgeFlags()
         return dialog
     }
 

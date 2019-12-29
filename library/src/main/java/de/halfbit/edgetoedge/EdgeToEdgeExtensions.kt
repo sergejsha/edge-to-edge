@@ -12,7 +12,7 @@ inline fun Fragment.edgeToEdge(block: EdgeToEdge.() -> Unit) {
 }
 
 inline fun Dialog.edgeToEdge(block: EdgeToEdge.() -> Unit) {
-    val window = requireWindow()
+    val window = requireNotNull(window) { "Dialog's window must be not null" }
     EdgeToEdge(window.decorView, window).also(block).build()
 }
 
@@ -20,8 +20,6 @@ inline fun Activity.edgeToEdge(block: EdgeToEdge.() -> Unit) {
     val window = requireNotNull(window) { "Dialog's window must be not null" }
     EdgeToEdge(window.decorView, window).also(block).build()
 }
-
-fun Dialog.requireWindow() = requireNotNull(window) { "Dialog's window must be not null" }
 
 fun Window.setEdgeToEdgeFlags() {
     with(decorView) {

@@ -1,3 +1,7 @@
+# 0.4 (29.12.2019)
+* New public `Window.setEdgeToEdgeFlags()`.
+* New samples for `BottomSheetDialog` and `BottomSheetDialogFragment`. 
+
 # 0.3 (27.12.2019)
 * Edge-to-Edge system window flags are set automatically.
 * New `fit { adjustment = Adjustment.Margin }`.
