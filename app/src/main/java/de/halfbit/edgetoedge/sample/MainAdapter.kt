@@ -7,10 +7,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import de.halfbit.edgetoedge.sample.examples.SplashScreenFragment
-import de.halfbit.edgetoedge.sample.examples.ToolbarWithScrollableContentFragment
-import de.halfbit.edgetoedge.sample.examples.ToolbarWithScrollableContentAndFabFragment
-import de.halfbit.edgetoedge.sample.examples.ToolbarWithViewpagerFragment
+import de.halfbit.edgetoedge.sample.examples.*
 
 class MainAdapter(private val onItemClicked: OnItemClicked) :
     RecyclerView.Adapter<ItemViewHolder>() {
@@ -19,7 +16,8 @@ class MainAdapter(private val onItemClicked: OnItemClicked) :
         Item(R.string.splash) { SplashScreenFragment() },
         Item(R.string.toolbar) { ToolbarWithScrollableContentFragment() },
         Item(R.string.toolbar_fab) { ToolbarWithScrollableContentAndFabFragment() },
-        Item(R.string.toolbar_viewpager) { ToolbarWithViewpagerFragment() }
+        Item(R.string.toolbar_viewpager) { ToolbarWithViewpagerFragment() },
+        Item(R.string.bottom_sheet_dialog) { BottomSheetDialogFragment() }
     )
 
     override fun getItemCount(): Int = items.size

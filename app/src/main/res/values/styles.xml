@@ -15,6 +15,7 @@
 
         <item name="snackbarStyle">@style/AppWidget.Snackbar</item>
         <item name="floatingActionButtonStyle">@style/AppWidget.Fab</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
     </style>
 
     <style name="AppWidget" />

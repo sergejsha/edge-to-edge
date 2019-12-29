@@ -36,9 +36,9 @@ class EdgeToEdge(
 
     @PublishedApi
     internal fun build() {
-        if (rootView.getTag(R.id.edgetoedge) == null) {
-            window.enableEdgeToEdge()
-            rootView.setTag(R.id.edgetoedge, Unit)
+        if (window.decorView.getTag(R.id.edgetoedge) == null) {
+            window.setEdgeToEdgeFlags()
+            window.decorView.setTag(R.id.edgetoedge, Unit)
         }
 
         rootView.onApplyWindowInsets { insets ->
@@ -225,13 +225,5 @@ private fun Fitting.applyBottomInsetAsHeight(insets: WindowInsetsCompat) {
             insets.systemWindowInsetBottom, View.MeasureSpec.EXACTLY
         )
         view.layoutParams = layoutParams
-    }
-}
-
-private fun Window.enableEdgeToEdge() {
-    with(decorView) {
-        systemUiVisibility = systemUiVisibility or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 }

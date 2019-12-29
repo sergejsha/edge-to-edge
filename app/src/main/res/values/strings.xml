@@ -7,4 +7,10 @@
     <string name="toolbar_viewpager">Toolbar + ViewPager in ConstraintLayout</string>
     <string name="top_text">Top text</string>
     <string name="bottom_text">Bottom text</string>
+    <string name="bottom_sheet_dialog">BottomSheetDialog and BottomSheetDialogFragment</string>
+    <string name="bottom_sheet_dialog_show_as_dialog">Show as dialog</string>
+    <string name="bottom_sheet_dialog_show_as_fragment">Show as fragment</string>
+    <string name="option1">Option 1</string>
+    <string name="option2">Option 2</string>
+    <string name="option3">Option 3</string>
 </resources>
