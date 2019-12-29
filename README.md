@@ -38,7 +38,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 }
 ```
 
-See sample app for more examples.
+See sample app for more edge-to-edge examples.
 
 # Download
 ```gradle
