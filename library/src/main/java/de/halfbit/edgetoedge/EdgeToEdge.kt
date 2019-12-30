@@ -24,10 +24,11 @@ class EdgeToEdge(
             clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null,
             consumeInsets = false
         ).also {
+            val edge = block(it)
             fittings += Fitting(
                 view = this,
                 adjustment = it.adjustment,
-                edge = block(it),
+                edge = edge,
                 clipToPadding = it.clipToPadding,
                 consumeInsets = it.consumeInsets
             )

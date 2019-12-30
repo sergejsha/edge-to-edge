@@ -46,5 +46,5 @@ class ItemViewHolder(
     }
 }
 
-private const val QUALITY =
+internal const val QUALITY =
     "ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=640&q=80"
