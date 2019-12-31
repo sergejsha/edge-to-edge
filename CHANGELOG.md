@@ -1,3 +1,7 @@
+Unreleased
+* `edgeToEdge {}` can be applied multiple times.
+* New `ConstraintLayout + Transition` sample screen.
+
 # 0.4 (29.12.2019)
 * New public `Window.setEdgeToEdgeFlags()`.
 * New samples for `BottomSheetDialog` and `BottomSheetDialogFragment`. 
