@@ -7,45 +7,64 @@ import android.widget.Space
 import androidx.core.view.ScrollingView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.util.WeakHashMap
 
 @DslMarker
 annotation class EdgeToEdgeDsl
 
 @EdgeToEdgeDsl
-class EdgeToEdge(
+class EdgeToEdgeBuilder(
     private val rootView: View,
     private val window: Window
 ) {
-    private val fittings: MutableList<Fitting> = mutableListOf()
+
+    private val edgeToEdge: EdgeToEdge =
+        rootView.getTag(R.id.edgetoedge) as? EdgeToEdge
+            ?: EdgeToEdge().also { rootView.setTag(R.id.edgetoedge, it) }
 
     fun View.fit(block: FittingBuilder.() -> Edge) {
         FittingBuilder(
             adjustment = if (this is Space) Adjustment.Height else Adjustment.Padding,
             clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null,
             consumeInsets = false
-        ).also {
-            val edge = block(it)
-            fittings += Fitting(
+        ).also { builder ->
+
+            val edge = block(builder)
+            val layoutMargin = layoutParams as? ViewGroup.MarginLayoutParams
+            val fitting = Fitting(
                 view = this,
-                adjustment = it.adjustment,
                 edge = edge,
-                clipToPadding = it.clipToPadding,
-                consumeInsets = it.consumeInsets
+                adjustment = builder.adjustment,
+                clipToPadding = builder.clipToPadding,
+                consumeInsets = builder.consumeInsets,
+                paddingTop = paddingTop,
+                paddingBottom = paddingBottom,
+                marginTop = layoutMargin?.topMargin ?: 0,
+                marginBottom = layoutMargin?.bottomMargin ?: 0
             )
+
+            builder.clipToPadding?.let {
+                check(this is ViewGroup) {
+                    "'clipToPadding' can only be applied to ViewGroup, actual: $this"
+                }
+                clipToPadding = it
+            }
+
+            edgeToEdge.fittings[fitting.view] = fitting
         }
     }
 
     @PublishedApi
     internal fun build() {
-        if (window.decorView.getTag(R.id.edgetoedge) == null) {
-            window.setEdgeToEdgeFlags()
-            window.decorView.setTag(R.id.edgetoedge, Unit)
-        }
+        val edgeToEdgeEnabled = window.decorView.systemUiVisibility and
+                (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) > 0
+        if (!edgeToEdgeEnabled) window.setEdgeToEdgeFlags()
 
         rootView.onApplyWindowInsets { insets ->
             var consumeTop = false
             var consumeBottom = false
-            for (fitting in fittings) {
+            for (fitting in edgeToEdge.fittings.values) {
                 with(fitting) {
                     when (edge) {
                         Edge.Top -> {
@@ -93,26 +112,11 @@ class EdgeToEdge(
     private fun View.onApplyWindowInsets(
         block: (insets: WindowInsetsCompat) -> WindowInsetsCompat
     ) {
-        for (fitting in fittings) {
-            with(fitting) {
-                clipToPadding?.let {
-                    check(view is ViewGroup) {
-                        "'clipToPadding' can only be applied to ViewGroup, actual: $this"
-                    }
-                    view.clipToPadding = it
-                }
-
-                paddingTop = view.paddingTop
-                paddingBottom = view.paddingBottom
-
-                val layoutMargin = view.layoutParams as? ViewGroup.MarginLayoutParams
-                layoutMargin?.let {
-                    marginTop = it.topMargin
-                    marginBottom = it.bottomMargin
-                }
-            }
+        if (!edgeToEdge.listening) {
+            edgeToEdge.listening = true
+            ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets -> block(insets) }
         }
-        ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets -> block(insets) }
+
         if (isAttachedToWindow) ViewCompat.requestApplyInsets(this)
         else addOnAttachStateChangeListener(
             object : View.OnAttachStateChangeListener {
@@ -143,20 +147,24 @@ sealed class Edge {
     internal object TopBottom : Edge()
 }
 
+enum class Adjustment { Padding, Margin, Height }
+
 internal data class Fitting(
     val view: View,
     val adjustment: Adjustment,
     val edge: Edge,
     val clipToPadding: Boolean?,
-    val consumeInsets: Boolean
-) {
-    var paddingTop: Int = 0
-    var paddingBottom: Int = 0
-    var marginTop: Int = 0
-    var marginBottom: Int = 0
-}
+    val consumeInsets: Boolean,
+    val paddingTop: Int,
+    val paddingBottom: Int,
+    val marginTop: Int,
+    val marginBottom: Int
+)
 
-enum class Adjustment { Padding, Margin, Height }
+internal data class EdgeToEdge(
+    val fittings: WeakHashMap<View, Fitting> = WeakHashMap(),
+    var listening: Boolean = false
+)
 
 private fun Fitting.applyTopInsetAsPadding(insets: WindowInsetsCompat) {
     val top = paddingTop + insets.systemWindowInsetTop
