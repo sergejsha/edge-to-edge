@@ -16,7 +16,7 @@ import de.halfbit.edgetoedge.sample.R
 import de.halfbit.edgetoedge.sample.commons.QUALITY
 import kotlinx.android.synthetic.main.fragment_constraint_layout_transition.*
 
-class ConstraintLayoutTransitions : BaseFragment() {
+class ConstraintLayoutTransitionsFragment : BaseFragment() {
 
     private var collapse = false
     private val transition = ChangeBounds().apply {

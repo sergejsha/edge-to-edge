@@ -18,7 +18,7 @@ class MainAdapter(private val onItemClicked: OnItemClicked) :
         Item(R.string.toolbar_fab) { ToolbarWithScrollableContentAndFabFragment() },
         Item(R.string.toolbar_viewpager) { ToolbarWithViewpagerFragment() },
         Item(R.string.bottom_sheet_dialog) { BottomSheetDialogFragment() },
-        Item(R.string.constraint_layout_transitions) { ConstraintLayoutTransitions() }
+        Item(R.string.constraint_layout_transitions) { ConstraintLayoutTransitionsFragment() }
     )
 
     override fun getItemCount(): Int = items.size
