@@ -40,12 +40,8 @@ class ConstraintLayoutTransitionsFragment : BaseFragment() {
         tapToExtend.setOnClickListener {
             if (collapse) {
                 transitionInto(R.layout.fragment_constraint_layout_transition)
-                edgeToEdge {
-                    tapToExtend.fit {
-                        adjustment = Adjustment.Margin
-                        Edge.Bottom
-                    }
-                }
+                // fixme: replace edgeToEdge call with requestApplyInsets() call
+                edgeToEdge { }
             } else {
                 transitionInto(R.layout.fragment_constraint_layout_transition_expanded)
             }
