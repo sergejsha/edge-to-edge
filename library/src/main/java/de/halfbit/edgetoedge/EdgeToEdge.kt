@@ -45,7 +45,7 @@ class EdgeToEdgeBuilder(
 
             builder.clipToPadding?.let {
                 check(this is ViewGroup) {
-                    "'clipToPadding' can only be applied to ViewGroup, actual: $this"
+                    "'clipToPadding' can only be applied to a ViewGroup, actual: $this"
                 }
                 clipToPadding = it
             }
@@ -72,7 +72,7 @@ class EdgeToEdgeBuilder(
                 with(fitting) {
                     when (edge) {
                         Edge.Top -> {
-                            consumeTop = consumeInsets
+                            consumeTop = consumeTop || consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding -> applyTopInsetAsPadding(insets)
                                 Adjustment.Margin -> applyTopInsetAsMargin(insets)
@@ -80,7 +80,7 @@ class EdgeToEdgeBuilder(
                             }
                         }
                         Edge.Bottom -> {
-                            consumeBottom = consumeInsets
+                            consumeBottom = consumeBottom || consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding -> applyBottomInsetAsPadding(insets)
                                 Adjustment.Margin -> applyBottomInsetAsMargin(insets)
@@ -88,13 +88,14 @@ class EdgeToEdgeBuilder(
                             }
                         }
                         Edge.TopBottom -> {
-                            consumeTop = consumeInsets
-                            consumeBottom = consumeInsets
-                            when (fitting.adjustment) {
+                            consumeTop = consumeTop || consumeInsets
+                            consumeBottom = consumeBottom || consumeInsets
+                            when (adjustment) {
                                 Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets)
-                                Adjustment.Margin -> applyTopAndBottomInsetAsMargin(insets)
+                                Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets)
                                 Adjustment.Height -> error(
-                                    "Height adjustment can only be used either Top or Bottom."
+                                    "Height adjustment can only be allied to " +
+                                            " either Top or Bottom edge."
                                 )
                             }
                         }
@@ -120,7 +121,7 @@ class EdgeToEdgeBuilder(
             edgeToEdge.listening = true
             ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets -> block(insets) }
         }
-        dispatchSystemWindowInsets()
+        dispatchWindowInsets()
     }
 }
 
@@ -160,7 +161,7 @@ internal data class EdgeToEdge(
     var listening: Boolean = false
 )
 
-internal fun View.dispatchSystemWindowInsets() {
+internal fun View.dispatchWindowInsets() {
     if (isAttachedToWindow) ViewCompat.requestApplyInsets(this)
     else addOnAttachStateChangeListener(
         object : View.OnAttachStateChangeListener {
@@ -213,7 +214,7 @@ private fun Fitting.applyBottomInsetAsMargin(insets: WindowInsetsCompat) {
     }
 }
 
-private fun Fitting.applyTopAndBottomInsetAsMargin(insets: WindowInsetsCompat) {
+private fun Fitting.applyTopAndBottomInsetsAsMargin(insets: WindowInsetsCompat) {
     val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
     val top = marginTop + insets.systemWindowInsetTop
     val bottom = marginBottom + insets.systemWindowInsetBottom

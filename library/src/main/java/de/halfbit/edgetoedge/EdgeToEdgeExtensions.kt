@@ -34,7 +34,7 @@ inline fun Fragment.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
  * applying a new `ConstraintSet` to an instance of `ConstraintLayout`.
  */
 fun Fragment.fitEdgeToEdge() {
-    requireView().dispatchSystemWindowInsets()
+    requireView().dispatchWindowInsets()
 }
 
 inline fun Dialog.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
