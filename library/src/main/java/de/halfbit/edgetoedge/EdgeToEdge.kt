@@ -54,6 +54,10 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    fun View.unfit() {
+        edgeToEdge.fittings.remove(this)
+    }
+
     @PublishedApi
     internal fun build() {
         val edgeToEdgeEnabled = window.decorView.systemUiVisibility and

@@ -1,7 +1,9 @@
 # Unreleased
-* New `Fragment.fitEdgeToEdge()` function forcing the view previously configured in `edgeToEdge {}` block to fit the edges. 
+* New `Fragment.fitEdgeToEdge()` function.
+* New `edgeToEdge { view.unfit() }` function.  
 * New `ConstraintLayout + Transition` sample screen.
 * `edgeToEdge {}` can be applied multiple times.
+* Some documentation added.
 
 # 0.4 (29.12.2019)
 * New public `Window.setEdgeToEdgeFlags()`.
