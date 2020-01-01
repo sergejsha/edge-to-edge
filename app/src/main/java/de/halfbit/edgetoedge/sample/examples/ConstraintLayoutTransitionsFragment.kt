@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import de.halfbit.edgetoedge.Adjustment
 import de.halfbit.edgetoedge.Edge
 import de.halfbit.edgetoedge.edgeToEdge
+import de.halfbit.edgetoedge.fitEdgeToEdge
 import de.halfbit.edgetoedge.sample.BaseFragment
 import de.halfbit.edgetoedge.sample.R
 import de.halfbit.edgetoedge.sample.commons.QUALITY
@@ -40,8 +41,7 @@ class ConstraintLayoutTransitionsFragment : BaseFragment() {
         tapToExtend.setOnClickListener {
             if (collapse) {
                 transitionInto(R.layout.fragment_constraint_layout_transition)
-                // fixme: replace edgeToEdge call with requestApplyInsets() call
-                edgeToEdge { }
+                fitEdgeToEdge()
             } else {
                 transitionInto(R.layout.fragment_constraint_layout_transition_expanded)
             }

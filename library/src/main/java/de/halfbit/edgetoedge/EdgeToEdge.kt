@@ -116,17 +116,7 @@ class EdgeToEdgeBuilder(
             edgeToEdge.listening = true
             ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets -> block(insets) }
         }
-
-        if (isAttachedToWindow) ViewCompat.requestApplyInsets(this)
-        else addOnAttachStateChangeListener(
-            object : View.OnAttachStateChangeListener {
-                override fun onViewDetachedFromWindow(view: View) {}
-                override fun onViewAttachedToWindow(view: View) {
-                    view.removeOnAttachStateChangeListener(this)
-                    ViewCompat.requestApplyInsets(view)
-                }
-            }
-        )
+        dispatchSystemWindowInsets()
     }
 }
 
@@ -165,6 +155,19 @@ internal data class EdgeToEdge(
     val fittings: WeakHashMap<View, Fitting> = WeakHashMap(),
     var listening: Boolean = false
 )
+
+internal fun View.dispatchSystemWindowInsets() {
+    if (isAttachedToWindow) ViewCompat.requestApplyInsets(this)
+    else addOnAttachStateChangeListener(
+        object : View.OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(view: View) {}
+            override fun onViewAttachedToWindow(view: View) {
+                view.removeOnAttachStateChangeListener(this)
+                ViewCompat.requestApplyInsets(view)
+            }
+        }
+    )
+}
 
 private fun Fitting.applyTopInsetAsPadding(insets: WindowInsetsCompat) {
     val top = paddingTop + insets.systemWindowInsetTop

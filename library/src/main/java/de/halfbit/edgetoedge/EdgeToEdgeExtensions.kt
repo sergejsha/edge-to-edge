@@ -6,9 +6,12 @@ import android.view.Window
 import androidx.fragment.app.Fragment
 
 inline fun Fragment.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
-    val rootView = requireNotNull(view) { "fragment.view must not be null, fragment: $this" }
     val window = requireNotNull(activity?.window) { "fragment's activity must be not null" }
-    EdgeToEdgeBuilder(rootView, window).also(block).build()
+    EdgeToEdgeBuilder(requireView(), window).also(block).build()
+}
+
+fun Fragment.fitEdgeToEdge() {
+    requireView().dispatchSystemWindowInsets()
 }
 
 inline fun Dialog.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
