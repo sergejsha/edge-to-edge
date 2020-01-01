@@ -1,7 +1,7 @@
 # 0.6 (unreleased)
 * Fix `consumeInsets` was improperly overwritten in some cases.  
 
-# 0.5 (01.10.2020)
+# 0.5 (01.01.2020)
 * New `Fragment.fitEdgeToEdge()` function.
 * New `edgeToEdge { view.unfit() }` function.  
 * New `ConstraintLayout + Transition` sample screen.
