@@ -1,4 +1,4 @@
-# Unreleased
+# 0.5 (01.10.2020)
 * New `Fragment.fitEdgeToEdge()` function.
 * New `edgeToEdge { view.unfit() }` function.  
 * New `ConstraintLayout + Transition` sample screen.
