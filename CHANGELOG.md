@@ -1,4 +1,4 @@
-# 0.6 (unreleased)
+# 0.6 (02.01.2020)
 * New `view.fitMargin`, `view.fitPadding` and `view.fitHeight` convenience methods.
 * View fitting cannot consume window insets anymore. 
 * View property is a weak reference in the fitting class.
@@ -25,4 +25,3 @@
 
 # 0.1 (26.12.2019)
 * Initial release
-
