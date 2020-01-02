@@ -1,5 +1,6 @@
 # 0.6 (unreleased)
-* Fix `consumeInsets` was improperly overwritten in some cases.  
+* Fix `consumeInsets` was improperly overwritten in some cases.
+* New `view.fitMargin`, `view.fitPadding` and `view.fitHeight` convenience methods.
 
 # 0.5 (01.01.2020)
 * New `Fragment.fitEdgeToEdge()` function.

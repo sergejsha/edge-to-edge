@@ -54,6 +54,27 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    fun View.fitPadding(block: FittingBuilder.() -> Edge) {
+        fit {
+            adjustment = Adjustment.Padding
+            block()
+        }
+    }
+
+    fun View.fitMargin(block: FittingBuilder.() -> Edge) {
+        fit {
+            adjustment = Adjustment.Margin
+            block()
+        }
+    }
+
+    fun View.fitHeight(block: FittingBuilder.() -> Edge) {
+        fit {
+            adjustment = Adjustment.Height
+            block()
+        }
+    }
+
     fun View.unfit() {
         edgeToEdge.fittings.remove(this)
     }
