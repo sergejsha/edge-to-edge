@@ -26,8 +26,7 @@ class EdgeToEdgeBuilder(
     fun View.fit(block: FittingBuilder.() -> Edge) {
         FittingBuilder(
             adjustment = if (this is Space) Adjustment.Height else Adjustment.Padding,
-            clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null,
-            consumeInsets = false
+            clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null
         ).also { builder ->
 
             val edge = block(builder)
@@ -37,7 +36,6 @@ class EdgeToEdgeBuilder(
                 edge = edge,
                 adjustment = builder.adjustment,
                 clipToPadding = builder.clipToPadding,
-                consumeInsets = builder.consumeInsets,
                 paddingTop = paddingTop,
                 paddingBottom = paddingBottom,
                 marginTop = layoutMargin?.topMargin ?: 0,
@@ -88,14 +86,11 @@ class EdgeToEdgeBuilder(
         if (!edgeToEdgeEnabled) window.setEdgeToEdgeFlags()
 
         rootView.onApplyWindowInsets { insets ->
-            var consumeTop = false
-            var consumeBottom = false
             for (fitting in edgeToEdge.fittings.values) {
                 val view = fitting.view.get() ?: continue
                 with(fitting) {
                     when (edge) {
                         Edge.Top -> {
-                            consumeTop = consumeTop || consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding -> applyTopInsetAsPadding(insets, view)
                                 Adjustment.Margin -> applyTopInsetAsMargin(insets, view)
@@ -103,7 +98,6 @@ class EdgeToEdgeBuilder(
                             }
                         }
                         Edge.Bottom -> {
-                            consumeBottom = consumeBottom || consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding -> applyBottomInsetAsPadding(insets, view)
                                 Adjustment.Margin -> applyBottomInsetAsMargin(insets, view)
@@ -111,8 +105,6 @@ class EdgeToEdgeBuilder(
                             }
                         }
                         Edge.TopBottom -> {
-                            consumeTop = consumeTop || consumeInsets
-                            consumeBottom = consumeBottom || consumeInsets
                             when (adjustment) {
                                 Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets, view)
                                 Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets, view)
@@ -125,15 +117,7 @@ class EdgeToEdgeBuilder(
                     }
                 }
             }
-
-            if (consumeTop || consumeBottom) {
-                insets.replaceSystemWindowInsets(
-                    insets.systemWindowInsetLeft,
-                    if (consumeTop) 0 else insets.systemWindowInsetTop,
-                    insets.systemWindowInsetRight,
-                    if (consumeBottom) 0 else insets.systemWindowInsetBottom
-                )
-            } else insets
+            insets
         }
     }
 
@@ -151,8 +135,7 @@ class EdgeToEdgeBuilder(
 @EdgeToEdgeDsl
 class FittingBuilder(
     var adjustment: Adjustment,
-    var clipToPadding: Boolean?,
-    var consumeInsets: Boolean
+    var clipToPadding: Boolean?
 )
 
 sealed class Edge {
@@ -172,7 +155,6 @@ internal data class Fitting(
     val adjustment: Adjustment,
     val edge: Edge,
     val clipToPadding: Boolean?,
-    val consumeInsets: Boolean,
     val paddingTop: Int,
     val paddingBottom: Int,
     val marginTop: Int,

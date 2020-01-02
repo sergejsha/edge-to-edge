@@ -1,7 +1,7 @@
 # 0.6 (unreleased)
-* Fix `consumeInsets` was improperly overwritten in some cases.
 * New `view.fitMargin`, `view.fitPadding` and `view.fitHeight` convenience methods.
-* Internal improvements.
+* View fitting cannot consume window insets anymore. 
+* View property is a weak reference in the fitting class.
 
 # 0.5 (01.01.2020)
 * New `Fragment.fitEdgeToEdge()` function.
