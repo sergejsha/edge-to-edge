@@ -7,6 +7,7 @@ import android.widget.Space
 import androidx.core.view.ScrollingView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.lang.ref.WeakReference
 import java.util.WeakHashMap
 
 @DslMarker
@@ -32,7 +33,7 @@ class EdgeToEdgeBuilder(
             val edge = block(builder)
             val layoutMargin = layoutParams as? ViewGroup.MarginLayoutParams
             val fitting = Fitting(
-                view = this,
+                view = WeakReference(this),
                 edge = edge,
                 adjustment = builder.adjustment,
                 clipToPadding = builder.clipToPadding,
@@ -50,7 +51,7 @@ class EdgeToEdgeBuilder(
                 clipToPadding = it
             }
 
-            edgeToEdge.fittings[fitting.view] = fitting
+            edgeToEdge.fittings[this] = fitting
         }
     }
 
@@ -90,30 +91,31 @@ class EdgeToEdgeBuilder(
             var consumeTop = false
             var consumeBottom = false
             for (fitting in edgeToEdge.fittings.values) {
+                val view = fitting.view.get() ?: continue
                 with(fitting) {
                     when (edge) {
                         Edge.Top -> {
                             consumeTop = consumeTop || consumeInsets
                             when (adjustment) {
-                                Adjustment.Padding -> applyTopInsetAsPadding(insets)
-                                Adjustment.Margin -> applyTopInsetAsMargin(insets)
-                                Adjustment.Height -> applyTopInsetAsHeight(insets)
+                                Adjustment.Padding -> applyTopInsetAsPadding(insets, view)
+                                Adjustment.Margin -> applyTopInsetAsMargin(insets, view)
+                                Adjustment.Height -> applyTopInsetAsHeight(insets, view)
                             }
                         }
                         Edge.Bottom -> {
                             consumeBottom = consumeBottom || consumeInsets
                             when (adjustment) {
-                                Adjustment.Padding -> applyBottomInsetAsPadding(insets)
-                                Adjustment.Margin -> applyBottomInsetAsMargin(insets)
-                                Adjustment.Height -> applyBottomInsetAsHeight(insets)
+                                Adjustment.Padding -> applyBottomInsetAsPadding(insets, view)
+                                Adjustment.Margin -> applyBottomInsetAsMargin(insets, view)
+                                Adjustment.Height -> applyBottomInsetAsHeight(insets, view)
                             }
                         }
                         Edge.TopBottom -> {
                             consumeTop = consumeTop || consumeInsets
                             consumeBottom = consumeBottom || consumeInsets
                             when (adjustment) {
-                                Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets)
-                                Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets)
+                                Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets, view)
+                                Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets, view)
                                 Adjustment.Height -> error(
                                     "Height adjustment can only be allied to " +
                                             " either Top or Bottom edge."
@@ -166,7 +168,7 @@ sealed class Edge {
 enum class Adjustment { Padding, Margin, Height }
 
 internal data class Fitting(
-    val view: View,
+    val view: WeakReference<View>,
     val adjustment: Adjustment,
     val edge: Edge,
     val clipToPadding: Boolean?,
@@ -195,21 +197,21 @@ internal fun View.dispatchWindowInsets() {
     )
 }
 
-private fun Fitting.applyTopInsetAsPadding(insets: WindowInsetsCompat) {
+private fun Fitting.applyTopInsetAsPadding(insets: WindowInsetsCompat, view: View) {
     val top = paddingTop + insets.systemWindowInsetTop
     if (view.paddingTop != top) view.setPadding(
         view.paddingLeft, top, view.paddingRight, view.paddingBottom
     )
 }
 
-private fun Fitting.applyBottomInsetAsPadding(insets: WindowInsetsCompat) {
+private fun Fitting.applyBottomInsetAsPadding(insets: WindowInsetsCompat, view: View) {
     val bottom = paddingBottom + insets.systemWindowInsetBottom
     if (view.paddingBottom != bottom) view.setPadding(
         view.paddingLeft, view.paddingTop, view.paddingRight, bottom
     )
 }
 
-private fun Fitting.applyTopAndBottomInsetsAsPadding(insets: WindowInsetsCompat) {
+private fun Fitting.applyTopAndBottomInsetsAsPadding(insets: WindowInsetsCompat, view: View) {
     val top = paddingTop + insets.systemWindowInsetTop
     val bottom = paddingBottom + insets.systemWindowInsetBottom
     if (view.paddingTop != top || view.paddingBottom != bottom) view.setPadding(
@@ -217,7 +219,7 @@ private fun Fitting.applyTopAndBottomInsetsAsPadding(insets: WindowInsetsCompat)
     )
 }
 
-private fun Fitting.applyTopInsetAsMargin(insets: WindowInsetsCompat) {
+private fun Fitting.applyTopInsetAsMargin(insets: WindowInsetsCompat, view: View) {
     val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
     val top = marginTop + insets.systemWindowInsetTop
     if (top != layoutParams.topMargin) {
@@ -226,7 +228,7 @@ private fun Fitting.applyTopInsetAsMargin(insets: WindowInsetsCompat) {
     }
 }
 
-private fun Fitting.applyBottomInsetAsMargin(insets: WindowInsetsCompat) {
+private fun Fitting.applyBottomInsetAsMargin(insets: WindowInsetsCompat, view: View) {
     val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
     val bottom = marginBottom + insets.systemWindowInsetBottom
     if (bottom != layoutParams.bottomMargin) {
@@ -235,7 +237,7 @@ private fun Fitting.applyBottomInsetAsMargin(insets: WindowInsetsCompat) {
     }
 }
 
-private fun Fitting.applyTopAndBottomInsetsAsMargin(insets: WindowInsetsCompat) {
+private fun Fitting.applyTopAndBottomInsetsAsMargin(insets: WindowInsetsCompat, view: View) {
     val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
     val top = marginTop + insets.systemWindowInsetTop
     val bottom = marginBottom + insets.systemWindowInsetBottom
@@ -246,7 +248,7 @@ private fun Fitting.applyTopAndBottomInsetsAsMargin(insets: WindowInsetsCompat) 
     }
 }
 
-private fun Fitting.applyTopInsetAsHeight(insets: WindowInsetsCompat) {
+private fun applyTopInsetAsHeight(insets: WindowInsetsCompat, view: View) {
     if (view.height != insets.systemWindowInsetTop) {
         val layoutParams = view.layoutParams
         layoutParams.height = View.MeasureSpec.makeMeasureSpec(
@@ -256,7 +258,7 @@ private fun Fitting.applyTopInsetAsHeight(insets: WindowInsetsCompat) {
     }
 }
 
-private fun Fitting.applyBottomInsetAsHeight(insets: WindowInsetsCompat) {
+private fun applyBottomInsetAsHeight(insets: WindowInsetsCompat, view: View) {
     if (view.height != insets.systemWindowInsetBottom) {
         val layoutParams = view.layoutParams
         layoutParams.height = View.MeasureSpec.makeMeasureSpec(
