@@ -18,38 +18,20 @@ class EdgeToEdgeBuilder(
     private val rootView: View,
     private val window: Window
 ) {
-
     private val edgeToEdge: EdgeToEdge =
         rootView.getTag(R.id.edgetoedge) as? EdgeToEdge
             ?: EdgeToEdge().also { rootView.setTag(R.id.edgetoedge, it) }
 
     fun View.fit(block: FittingBuilder.() -> Edge) {
         FittingBuilder(
-            adjustment = if (this is Space) Adjustment.Height else Adjustment.Padding,
-            clipToPadding = if (this is ScrollingView && this is ViewGroup) false else null
+            adjustment = detectAdjustment(),
+            clipToPadding = detectClipToPadding()
         ).also { builder ->
-
             val edge = block(builder)
-            val layoutMargin = layoutParams as? ViewGroup.MarginLayoutParams
-            val fitting = Fitting(
-                view = WeakReference(this),
-                edge = edge,
-                adjustment = builder.adjustment,
-                clipToPadding = builder.clipToPadding,
-                paddingTop = paddingTop,
-                paddingBottom = paddingBottom,
-                marginTop = layoutMargin?.topMargin ?: 0,
-                marginBottom = layoutMargin?.bottomMargin ?: 0
-            )
-
-            builder.clipToPadding?.let {
-                check(this is ViewGroup) {
-                    "'clipToPadding' can only be applied to a ViewGroup, actual: $this"
-                }
-                clipToPadding = it
-            }
-
-            edgeToEdge.fittings[this] = fitting
+            val adjustment = builder.adjustment
+            val clipToPadding = builder.clipToPadding
+            applyClipToPadding(clipToPadding)
+            edgeToEdge.fittings[this] = createFitting(edge, adjustment, clipToPadding)
         }
     }
 
@@ -80,39 +62,32 @@ class EdgeToEdgeBuilder(
 
     @PublishedApi
     internal fun build() {
-        val edgeToEdgeEnabled = window.decorView.systemUiVisibility and
-                (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) > 0
-        if (!edgeToEdgeEnabled) window.setEdgeToEdgeFlags()
+        if (!window.hasEdgeToEdgeFlags()) {
+            window.setEdgeToEdgeFlags()
+        }
 
         rootView.onApplyWindowInsets { insets ->
             for (fitting in edgeToEdge.fittings.values) {
                 val view = fitting.view.get() ?: continue
                 with(fitting) {
                     when (edge) {
-                        Edge.Top -> {
-                            when (adjustment) {
-                                Adjustment.Padding -> applyTopInsetAsPadding(insets, view)
-                                Adjustment.Margin -> applyTopInsetAsMargin(insets, view)
-                                Adjustment.Height -> applyTopInsetAsHeight(insets, view)
-                            }
+                        Edge.Top -> when (adjustment) {
+                            Adjustment.Padding -> applyTopInsetAsPadding(insets, view)
+                            Adjustment.Margin -> applyTopInsetAsMargin(insets, view)
+                            Adjustment.Height -> applyTopInsetAsHeight(insets, view)
                         }
-                        Edge.Bottom -> {
-                            when (adjustment) {
-                                Adjustment.Padding -> applyBottomInsetAsPadding(insets, view)
-                                Adjustment.Margin -> applyBottomInsetAsMargin(insets, view)
-                                Adjustment.Height -> applyBottomInsetAsHeight(insets, view)
-                            }
+                        Edge.Bottom -> when (adjustment) {
+                            Adjustment.Padding -> applyBottomInsetAsPadding(insets, view)
+                            Adjustment.Margin -> applyBottomInsetAsMargin(insets, view)
+                            Adjustment.Height -> applyBottomInsetAsHeight(insets, view)
                         }
-                        Edge.TopBottom -> {
-                            when (adjustment) {
-                                Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets, view)
-                                Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets, view)
-                                Adjustment.Height -> error(
-                                    "Height adjustment can only be allied to " +
-                                            " either Top or Bottom edge."
-                                )
-                            }
+                        Edge.TopBottom -> when (adjustment) {
+                            Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets, view)
+                            Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets, view)
+                            Adjustment.Height -> error(
+                                "Height adjustment can only be applied to either" +
+                                        " Top or Bottom edge."
+                            )
                         }
                     }
                 }
@@ -121,8 +96,8 @@ class EdgeToEdgeBuilder(
         }
     }
 
-    private fun View.onApplyWindowInsets(
-        block: (insets: WindowInsetsCompat) -> WindowInsetsCompat
+    private inline fun View.onApplyWindowInsets(
+        crossinline block: (insets: WindowInsetsCompat) -> WindowInsetsCompat
     ) {
         if (!edgeToEdge.listening) {
             edgeToEdge.listening = true
@@ -150,7 +125,7 @@ sealed class Edge {
 
 enum class Adjustment { Padding, Margin, Height }
 
-internal data class Fitting(
+private data class Fitting(
     val view: WeakReference<View>,
     val adjustment: Adjustment,
     val edge: Edge,
@@ -161,7 +136,7 @@ internal data class Fitting(
     val marginBottom: Int
 )
 
-internal data class EdgeToEdge(
+private data class EdgeToEdge(
     val fittings: WeakHashMap<View, Fitting> = WeakHashMap(),
     var listening: Boolean = false
 )
@@ -249,3 +224,39 @@ private fun applyBottomInsetAsHeight(insets: WindowInsetsCompat, view: View) {
         view.layoutParams = layoutParams
     }
 }
+
+private fun View.detectAdjustment(): Adjustment =
+    if (this is Space) Adjustment.Height else Adjustment.Padding
+
+private fun View.detectClipToPadding(): Boolean? =
+    if (this is ScrollingView && this is ViewGroup) false else null
+
+private fun View.createFitting(
+    edge: Edge, adjustment: Adjustment, clipToPadding: Boolean?
+): Fitting {
+    val layoutMargin = layoutParams as? ViewGroup.MarginLayoutParams
+    return Fitting(
+        view = WeakReference(this),
+        edge = edge,
+        adjustment = adjustment,
+        clipToPadding = clipToPadding,
+        paddingTop = paddingTop,
+        paddingBottom = paddingBottom,
+        marginTop = layoutMargin?.topMargin ?: 0,
+        marginBottom = layoutMargin?.bottomMargin ?: 0
+    )
+}
+
+private fun View.applyClipToPadding(clipToPadding: Boolean?) {
+    clipToPadding?.let {
+        check(this is ViewGroup) {
+            "'clipToPadding' can only be applied to a ViewGroup, actual: $this"
+        }
+        this.clipToPadding = it
+    }
+}
+
+private fun Window.hasEdgeToEdgeFlags() =
+    decorView.systemUiVisibility and
+            (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) > 0

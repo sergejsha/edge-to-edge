@@ -1,5 +1,5 @@
 # 0.7 (unreleased)
-* Convenience fit-functions are inlined.
+* Code improvements.
 
 # 0.6 (02.01.2020)
 * New `view.fitMargin`, `view.fitPadding` and `view.fitHeight` convenience methods.
