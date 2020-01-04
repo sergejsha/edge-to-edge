@@ -1,7 +1,7 @@
-# 0.7 (unreleased)
-* Added more documentation.
-* Detection of default `adjustment` and `clipToPading` values was formalized. 
+# 0.7 (04.01.2020)
+* Detection of default `adjustment` and `clipToPading` values is documented.
 * `View.fitPadding`, `View.fitHeight` and `View.fitMargin` are inline methods now.
+* Documentation added.
 
 # 0.6 (02.01.2020)
 * New `view.fitMargin`, `view.fitPadding` and `view.fitHeight` convenience methods.
