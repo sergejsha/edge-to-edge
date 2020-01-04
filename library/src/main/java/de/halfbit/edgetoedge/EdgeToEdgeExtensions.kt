@@ -7,11 +7,12 @@ import androidx.fragment.app.Fragment
 
 /**
  * Declares a set of view fitting rules and requests [android.view.WindowInsets] to be
- * applied to the whole view hierarchy. The library will fit the views according to their
- * fitting rules each time [WindowInsets] are applied. The set is usually declared in the
- * `Fragment.onViewCreated()` callback, but it can be re-declared at any time later.
- * Each declaration adds new or overwrites already existing view fitting rules. For
- * removing a fitting rule [EdgeToEdgeBuilder.unfit] method can be used.
+ * applied to the view hierarchy. The library will fit the views according to their
+ * fitting rules each time [WindowInsets] are applied. The set is usually declared in
+ * the `Fragment.onViewCreated()` callback, but it can be re-declared at any time later,
+ * for instance after applying a [ConstraintSet]. Each declaration adds new or overwrites
+ * already existing view fitting rules. For removing a fitting rule [EdgeToEdgeBuilder.unfit]
+ * method can be used.
  *
  * ```
  * override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,8 +30,8 @@ inline fun Fragment.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
 }
 
 /**
- * Forces the views previously declared in [edgeToEdge] block to fit the edges again
- * by re-applying their fitting rules. This function can be used, for example, after
+ * Forces previously declared in [edgeToEdge] block views to fit the edges again
+ * by re-applying their fitting rules. This function can be called, for example, after
  * applying a new `ConstraintSet` to an instance of `ConstraintLayout`.
  */
 fun Fragment.fitEdgeToEdge() {

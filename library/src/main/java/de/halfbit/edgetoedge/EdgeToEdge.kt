@@ -3,6 +3,9 @@ package de.halfbit.edgetoedge
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ScrollView
 import android.widget.Space
 import androidx.core.view.ScrollingView
 import androidx.core.view.ViewCompat
@@ -22,12 +25,26 @@ class EdgeToEdgeBuilder(
         rootView.getTag(R.id.edgetoedge) as? EdgeToEdge
             ?: EdgeToEdge().also { rootView.setTag(R.id.edgetoedge, it) }
 
+    /**
+     * Returns the [Edge] of the screen, to which the view should aligned. The function
+     * detects the type of [Adjustment] and whether the view should disable `clipToPadding`
+     * as following:
+     *
+     * - for the [android.widget.Space], the adjustment is [Adjustment.Height]
+     * - for a [android.widget.Button] or [android.widget.ImageButton],  the adjustment
+     * is [Adjustment.Margin]
+     * - for any other widget, the adjustment is  [Adjustment.Padding]
+     * - `clipToPadding` is disabled for the [android.widget.ScrollView] and
+     * any instances of [androidx.core.view.ScrollingView]
+     *
+     * The defaults above can be overridden inside the fit-block.
+     */
     fun View.fit(block: FittingBuilder.() -> Edge) {
         FittingBuilder(
             adjustment = detectAdjustment(),
             clipToPadding = detectClipToPadding()
         ).also { builder ->
-            val edge = block(builder)
+            val edge = builder.block()
             val adjustment = builder.adjustment
             val clipToPadding = builder.clipToPadding
             applyClipToPadding(clipToPadding)
@@ -35,6 +52,9 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    /**
+     * Same as [fit] but overriding default adjustment to [Adjustment.Padding].
+     */
     inline fun View.fitPadding(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Padding
@@ -42,6 +62,9 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    /**
+     * Same as [fit] but overriding default adjustment to [Adjustment.Margin].
+     */
     inline fun View.fitMargin(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Margin
@@ -49,6 +72,9 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    /**
+     * Same as [fit] but overriding default adjustment to [Adjustment.Height].
+     */
     inline fun View.fitHeight(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Height
@@ -56,6 +82,9 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    /**
+     * Removes fitting rule for the view.
+     */
     fun View.unfit() {
         edgeToEdge.fittings.remove(this)
     }
@@ -226,10 +255,15 @@ private fun applyBottomInsetAsHeight(insets: WindowInsetsCompat, view: View) {
 }
 
 private fun View.detectAdjustment(): Adjustment =
-    if (this is Space) Adjustment.Height else Adjustment.Padding
+    when {
+        this is Space -> Adjustment.Height
+        (this is Button || this is ImageButton) &&
+                layoutParams is ViewGroup.MarginLayoutParams -> Adjustment.Margin
+        else -> Adjustment.Padding
+    }
 
 private fun View.detectClipToPadding(): Boolean? =
-    if (this is ScrollingView && this is ViewGroup) false else null
+    if (this is ScrollView || (this is ScrollingView && this is ViewGroup)) false else null
 
 private fun View.createFitting(
     edge: Edge, adjustment: Adjustment, clipToPadding: Boolean?
