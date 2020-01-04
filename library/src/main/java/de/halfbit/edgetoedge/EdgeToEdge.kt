@@ -26,18 +26,18 @@ class EdgeToEdgeBuilder(
             ?: EdgeToEdge().also { rootView.setTag(R.id.edgetoedge, it) }
 
     /**
-     * Returns the [Edge] of the screen, to which the view should aligned. The function
-     * detects the type of [Adjustment] and whether the view should disable `clipToPadding`
-     * as following:
+     * Fits the view to the returned [Edge] of the screen by adjusting its `padding`,
+     * `margin` or `height`. The function detects the type of [Adjustment] and whether
+     * `clipToPadding` should be applied to the view as following.
      *
-     * - for the [android.widget.Space], the adjustment is [Adjustment.Height]
-     * - for a [android.widget.Button] or [android.widget.ImageButton],  the adjustment
+     * - for [android.widget.Space] the adjustment is [Adjustment.Height]
+     * - for [android.widget.Button] or [android.widget.ImageButton] the adjustment
      * is [Adjustment.Margin]
-     * - for any other widget, the adjustment is  [Adjustment.Padding]
-     * - `clipToPadding` is disabled for the [android.widget.ScrollView] and
-     * any instances of [androidx.core.view.ScrollingView]
+     * - for any other widget the adjustment is [Adjustment.Padding]
+     * - `clipToPadding` is disabled for the [android.widget.ScrollView] and instances
+     * of [androidx.core.view.ScrollingView], and not changed for all the other widgets.
      *
-     * The defaults above can be overridden inside the fit-block.
+     * Default values can be overridden inside the `block` lambda function.
      */
     fun View.fit(block: FittingBuilder.() -> Edge) {
         FittingBuilder(
@@ -52,9 +52,7 @@ class EdgeToEdgeBuilder(
         }
     }
 
-    /**
-     * Same as [fit] but overriding default adjustment to [Adjustment.Padding].
-     */
+    /** Same as [fit] but overrides default adjustment to [Adjustment.Padding]. */
     inline fun View.fitPadding(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Padding
@@ -62,9 +60,7 @@ class EdgeToEdgeBuilder(
         }
     }
 
-    /**
-     * Same as [fit] but overriding default adjustment to [Adjustment.Margin].
-     */
+    /** Same as [fit] but overrides default adjustment to [Adjustment.Margin]. */
     inline fun View.fitMargin(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Margin
@@ -72,9 +68,7 @@ class EdgeToEdgeBuilder(
         }
     }
 
-    /**
-     * Same as [fit] but overriding default adjustment to [Adjustment.Height].
-     */
+    /** Same as [fit] but overrides default adjustment to [Adjustment.Height]. */
     inline fun View.fitHeight(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Height
@@ -82,9 +76,7 @@ class EdgeToEdgeBuilder(
         }
     }
 
-    /**
-     * Removes fitting rule for the view.
-     */
+    /** Removes fitting rule for the view. */
     fun View.unfit() {
         edgeToEdge.fittings.remove(this)
     }
