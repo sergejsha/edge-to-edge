@@ -31,7 +31,7 @@ In meanwhile, here is an Android library for enabling [edge-to-edge content](htt
 override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     edgeToEdge {
-        appbar.fit { Edge.Left + Edge.Top + Right }
+        appbar.fit { Edge.Left + Edge.Top + Edge.Right }
         recycler.fit { Edge.Bottom }
     }
     ...
