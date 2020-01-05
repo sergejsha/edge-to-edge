@@ -44,7 +44,7 @@ See sample app for more concreate edge-to-edge examples.
 
 Edge-to-Edge library is implemented around [WindowInsets](https://developer.android.com/reference/android/view/WindowInsets) class. Each time `WindowInsets` are dispatched through out the view hierarchy, the library fits views according to the declared fitting rules.
 
-Main differences to the awesome [chrisbanes/insetter](https://github.com/chrisbanes/insetter) library are its simple and declarative Kotlin DSL and the capability to remove fitting rules easily, which comes handy when working with transitions in `ConstraintLayout`.
+Main differences to the awesome [chrisbanes/insetter](https://github.com/chrisbanes/insetter) library are the simple and declarative Kotlin DSL and the capability to remove fitting rules easily, which comes handy when working with transitions in `ConstraintLayout`.
 
 # Download
 ```gradle
