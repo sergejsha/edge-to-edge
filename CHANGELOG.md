@@ -1,3 +1,6 @@
+# 0.8 (Unreleased)
+* New `Edge.Left` and `Edge.Right` edges.
+
 # 0.7 (04.01.2020)
 * Improved detection of default `adjustment` and `clipToPading` values.
 * `View.fitPadding`, `View.fitHeight` and `View.fitMargin` are inline methods now.

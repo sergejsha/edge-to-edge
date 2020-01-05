@@ -17,8 +17,8 @@ class MainFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         edgeToEdge {
-            appbar.fit { Edge.Top }
-            recycler.fit { Edge.Bottom }
+            appbar.fit { Edge.Left + Edge.Top + Edge.Right }
+            recycler.fit { Edge.Left + Edge.Bottom + Edge.Right }
         }
 
         recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))

@@ -47,6 +47,7 @@ class EdgeToEdgeBuilder(
             val edge = builder.block()
             val adjustment = builder.adjustment
             val clipToPadding = builder.clipToPadding
+            verifyEdgeAdjustment(edge, adjustment)
             applyClipToPadding(clipToPadding)
             edgeToEdge.fittings[this] = createFitting(edge, adjustment, clipToPadding)
         }
@@ -91,25 +92,10 @@ class EdgeToEdgeBuilder(
             for (fitting in edgeToEdge.fittings.values) {
                 val view = fitting.view.get() ?: continue
                 with(fitting) {
-                    when (edge) {
-                        Edge.Top -> when (adjustment) {
-                            Adjustment.Padding -> applyTopInsetAsPadding(insets, view)
-                            Adjustment.Margin -> applyTopInsetAsMargin(insets, view)
-                            Adjustment.Height -> applyTopInsetAsHeight(insets, view)
-                        }
-                        Edge.Bottom -> when (adjustment) {
-                            Adjustment.Padding -> applyBottomInsetAsPadding(insets, view)
-                            Adjustment.Margin -> applyBottomInsetAsMargin(insets, view)
-                            Adjustment.Height -> applyBottomInsetAsHeight(insets, view)
-                        }
-                        Edge.TopBottom -> when (adjustment) {
-                            Adjustment.Padding -> applyTopAndBottomInsetsAsPadding(insets, view)
-                            Adjustment.Margin -> applyTopAndBottomInsetsAsMargin(insets, view)
-                            Adjustment.Height -> error(
-                                "Height adjustment can only be applied to either" +
-                                        " Top or Bottom edge."
-                            )
-                        }
+                    when (adjustment) {
+                        Adjustment.Padding -> applyInsetsAsPadding(insets, view, edge.flags)
+                        Adjustment.Margin -> applyInsetsAsMargin(insets, view, edge.flags)
+                        Adjustment.Height -> applyInsetsAsHeight(insets, view, edge.flags)
                     }
                 }
             }
@@ -134,14 +120,22 @@ class FittingBuilder(
     var clipToPadding: Boolean?
 )
 
-sealed class Edge {
-    object Top : Edge() {
-        @Suppress("UNUSED_PARAMETER")
-        operator fun plus(bottom: Bottom): Edge = TopBottom
-    }
+private const val FLAG_LEFT = 1
+private const val FLAG_TOP = 1.shl(1)
+private const val FLAG_RIGHT = 1.shl(2)
+private const val FLAG_BOTTOM = 1.shl(3)
 
-    object Bottom : Edge()
-    internal object TopBottom : Edge()
+sealed class Edge(
+    internal val flags: Int
+) {
+    object Left : Edge(FLAG_LEFT)
+    object Top : Edge(FLAG_TOP)
+    object Right : Edge(FLAG_RIGHT)
+    object Bottom : Edge(FLAG_BOTTOM)
+    internal class CompositeEdge(edges: Int) : Edge(edges)
+
+    operator fun plus(edge: Edge): Edge =
+        CompositeEdge(this.flags + edge.flags)
 }
 
 enum class Adjustment { Padding, Margin, Height }
@@ -151,9 +145,13 @@ private data class Fitting(
     val adjustment: Adjustment,
     val edge: Edge,
     val clipToPadding: Boolean?,
+    val paddingLeft: Int,
     val paddingTop: Int,
+    val paddingRight: Int,
     val paddingBottom: Int,
+    val marginLeft: Int,
     val marginTop: Int,
+    val marginRight: Int,
     val marginBottom: Int
 )
 
@@ -175,72 +173,74 @@ internal fun View.dispatchWindowInsets() {
     )
 }
 
-private fun Fitting.applyTopInsetAsPadding(insets: WindowInsetsCompat, view: View) {
-    val top = paddingTop + insets.systemWindowInsetTop
-    if (view.paddingTop != top) view.setPadding(
-        view.paddingLeft, top, view.paddingRight, view.paddingBottom
-    )
-}
-
-private fun Fitting.applyBottomInsetAsPadding(insets: WindowInsetsCompat, view: View) {
-    val bottom = paddingBottom + insets.systemWindowInsetBottom
-    if (view.paddingBottom != bottom) view.setPadding(
-        view.paddingLeft, view.paddingTop, view.paddingRight, bottom
-    )
-}
-
-private fun Fitting.applyTopAndBottomInsetsAsPadding(insets: WindowInsetsCompat, view: View) {
-    val top = paddingTop + insets.systemWindowInsetTop
-    val bottom = paddingBottom + insets.systemWindowInsetBottom
-    if (view.paddingTop != top || view.paddingBottom != bottom) view.setPadding(
-        view.paddingLeft, top, view.paddingRight, bottom
-    )
-}
-
-private fun Fitting.applyTopInsetAsMargin(insets: WindowInsetsCompat, view: View) {
-    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-    val top = marginTop + insets.systemWindowInsetTop
-    if (top != layoutParams.topMargin) {
-        layoutParams.topMargin = top
-        view.layoutParams = layoutParams
-    }
-}
-
-private fun Fitting.applyBottomInsetAsMargin(insets: WindowInsetsCompat, view: View) {
-    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-    val bottom = marginBottom + insets.systemWindowInsetBottom
-    if (bottom != layoutParams.bottomMargin) {
-        layoutParams.bottomMargin = bottom
-        view.layoutParams = layoutParams
-    }
-}
-
-private fun Fitting.applyTopAndBottomInsetsAsMargin(insets: WindowInsetsCompat, view: View) {
-    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-    val top = marginTop + insets.systemWindowInsetTop
-    val bottom = marginBottom + insets.systemWindowInsetBottom
-    if (top != layoutParams.topMargin || bottom != layoutParams.bottomMargin) {
-        layoutParams.topMargin = top
-        layoutParams.bottomMargin = bottom
-        view.layoutParams = layoutParams
-    }
-}
-
-private fun applyTopInsetAsHeight(insets: WindowInsetsCompat, view: View) {
-    if (view.height != insets.systemWindowInsetTop) {
-        val layoutParams = view.layoutParams
-        layoutParams.height = View.MeasureSpec.makeMeasureSpec(
-            insets.systemWindowInsetTop, View.MeasureSpec.EXACTLY
+private fun View.verifyEdgeAdjustment(edge: Edge, adjustment: Adjustment) {
+    if (adjustment == Adjustment.Height && edge is Edge.CompositeEdge) {
+        val edges = StringBuilder()
+        if (edge.flags and FLAG_LEFT > 0) edges.append(", Left")
+        if (edge.flags and FLAG_TOP > 0) edges.append(", Top")
+        if (edge.flags and FLAG_RIGHT > 0) edges.append(", Right")
+        if (edge.flags and FLAG_BOTTOM > 0) edges.append(", Bottom")
+        throw IllegalArgumentException(
+            "Height adjustment can only be applied to a single edge." +
+                    " Actual edges: ${edges.substring(2)}, View: $this"
         )
+    }
+}
+
+private fun Fitting.applyInsetsAsPadding(insets: WindowInsetsCompat, view: View, flags: Int) {
+    val left = if (flags and FLAG_LEFT > 0)
+        paddingLeft + insets.systemWindowInsetLeft else view.paddingLeft
+    val top = if (flags and FLAG_TOP > 0)
+        paddingTop + insets.systemWindowInsetTop else view.paddingTop
+    val right = if (flags and FLAG_RIGHT > 0)
+        paddingRight + insets.systemWindowInsetRight else view.paddingRight
+    val bottom = if (flags and FLAG_BOTTOM > 0)
+        paddingBottom + insets.systemWindowInsetBottom else view.paddingBottom
+
+    if (view.paddingLeft != left ||
+        view.paddingTop != top ||
+        view.paddingRight != right ||
+        view.paddingBottom != bottom
+    ) view.setPadding(left, top, right, bottom)
+}
+
+private fun Fitting.applyInsetsAsMargin(insets: WindowInsetsCompat, view: View, flags: Int) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+
+    val left = if (flags and FLAG_LEFT > 0)
+        marginLeft + insets.systemWindowInsetLeft else layoutParams.leftMargin
+    val top = if (flags and FLAG_TOP > 0)
+        marginTop + insets.systemWindowInsetTop else layoutParams.topMargin
+    val right = if (flags and FLAG_RIGHT > 0)
+        marginRight + insets.systemWindowInsetRight else layoutParams.rightMargin
+    val bottom = if (flags and FLAG_BOTTOM > 0)
+        marginBottom + insets.systemWindowInsetBottom else layoutParams.bottomMargin
+
+    if (left != layoutParams.leftMargin ||
+        top != layoutParams.topMargin ||
+        right != layoutParams.rightMargin ||
+        bottom != layoutParams.bottomMargin
+    ) {
+        layoutParams.leftMargin = left
+        layoutParams.topMargin = top
+        layoutParams.rightMargin = right
+        layoutParams.bottomMargin = bottom
         view.layoutParams = layoutParams
     }
 }
 
-private fun applyBottomInsetAsHeight(insets: WindowInsetsCompat, view: View) {
-    if (view.height != insets.systemWindowInsetBottom) {
+private fun applyInsetsAsHeight(insets: WindowInsetsCompat, view: View, flags: Int) {
+    val height = when (flags) {
+        FLAG_LEFT -> insets.systemWindowInsetLeft
+        FLAG_TOP -> insets.systemWindowInsetTop
+        FLAG_RIGHT -> insets.systemWindowInsetRight
+        FLAG_BOTTOM -> insets.systemWindowInsetBottom
+        else -> error("Unexpected edge flags: $flags")
+    }
+    if (view.height != height) {
         val layoutParams = view.layoutParams
         layoutParams.height = View.MeasureSpec.makeMeasureSpec(
-            insets.systemWindowInsetBottom, View.MeasureSpec.EXACTLY
+            height, View.MeasureSpec.EXACTLY
         )
         view.layoutParams = layoutParams
     }
@@ -266,9 +266,13 @@ private fun View.createFitting(
         edge = edge,
         adjustment = adjustment,
         clipToPadding = clipToPadding,
+        paddingLeft = paddingLeft,
         paddingTop = paddingTop,
+        paddingRight = paddingRight,
         paddingBottom = paddingBottom,
+        marginLeft = layoutMargin?.leftMargin ?: 0,
         marginTop = layoutMargin?.topMargin ?: 0,
+        marginRight = layoutMargin?.rightMargin ?: 0,
         marginBottom = layoutMargin?.bottomMargin ?: 0
     )
 }

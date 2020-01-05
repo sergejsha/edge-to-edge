@@ -15,7 +15,7 @@ class ToolbarWithScrollableContentFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         edgeToEdge {
-            appbar.fit { Edge.Top }
+            appbar.fit { Edge.Left + Edge.Top + Edge.Right }
             recycler.fit { Edge.Bottom }
         }
 

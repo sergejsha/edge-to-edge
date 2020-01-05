@@ -21,7 +21,7 @@ class ToolbarWithViewpagerFragment : BaseFragment() {
         viewpager.adapter = PagesAdapter(this)
 
         edgeToEdge {
-            appbar.fit { Edge.Top }
+            appbar.fit { Edge.Left + Edge.Top + Edge.Right }
         }
     }
 }
