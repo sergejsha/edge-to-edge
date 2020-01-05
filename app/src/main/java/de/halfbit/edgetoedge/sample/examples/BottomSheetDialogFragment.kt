@@ -27,7 +27,6 @@ class BottomSheetDialogFragment : BaseFragment() {
             layoutInflater
                 .inflate(R.layout.fragment_bottom_sheet_dialog_options, null)
                 .also { optionsView ->
-
                     listOf(
                         optionsView.findViewById<View>(R.id.option1),
                         optionsView.findViewById<View>(R.id.option2),
@@ -77,7 +76,7 @@ class BSDFragment : MaterialBSDFragment() {
 
         optionsView.unfitSystemWindow()
         edgeToEdge {
-            optionsView.fit { Edge.Bottom }
+            optionsView.fit { Edge.Left + Edge.Bottom + Edge.Right }
         }
     }
 }

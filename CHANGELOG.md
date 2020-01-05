@@ -1,4 +1,4 @@
-# 0.8 (Unreleased)
+# 0.8 (05.01.2020)
 * New `Edge.Left` and `Edge.Right` edges.
 
 # 0.7 (04.01.2020)
