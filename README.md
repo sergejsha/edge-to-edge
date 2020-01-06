@@ -46,6 +46,8 @@ Edge-to-Edge library is implemented around [WindowInsets](https://developer.andr
 
 Main differences to the awesome [chrisbanes/insetter](https://github.com/chrisbanes/insetter) library are the simple and declarative Kotlin DSL and the capability to remove fitting rules easily, which comes handy when working with transitions in `ConstraintLayout`.
 
+Edge-to-Edge library fits a view to one or more device edges by modifying its `padding`, `margin` or `height` attribute with  the values taken from the current window inset. The library auto-detects the attrbitutes to modify, but this can be overridden by using `fitPadding`, `fitMargin` or `fitHeight` functions.
+
 # Download
 ```gradle
 repositories {
