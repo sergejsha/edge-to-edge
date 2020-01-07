@@ -132,6 +132,10 @@ sealed class Edge(
     object Top : Edge(FLAG_TOP)
     object Right : Edge(FLAG_RIGHT)
     object Bottom : Edge(FLAG_BOTTOM)
+
+    /** Shortcut for [Edge.Left] + [Edge.Top] + [Edge.Right] + [Edge.Bottom] */
+    object All : Edge(FLAG_LEFT + FLAG_TOP + FLAG_RIGHT + FLAG_BOTTOM)
+
     internal class CompositeEdge(edges: Int) : Edge(edges)
 
     operator fun plus(edge: Edge): Edge =

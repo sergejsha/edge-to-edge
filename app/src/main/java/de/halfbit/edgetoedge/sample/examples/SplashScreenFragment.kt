@@ -14,7 +14,7 @@ class SplashScreenFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         edgeToEdge {
-            container.fit { Edge.Top + Edge.Bottom }
+            container.fit { Edge.All }
         }
     }
 }

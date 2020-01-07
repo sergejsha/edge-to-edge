@@ -1,3 +1,6 @@
+# 0.9 (unreleased)
+* New `Edge.All` shortcut edge.
+
 # 0.8 (05.01.2020)
 * New `Edge.Left` and `Edge.Right` edges.
 
