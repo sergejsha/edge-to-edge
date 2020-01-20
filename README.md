@@ -54,9 +54,6 @@ The library is implemented around [WindowInsets](https://developer.android.com/r
 
 Edge-to-Edge library fits each view to one or more device edges by modifying its `padding`, `margin` or `height` attribute with  the values taken from the current `WindowInsets`. Padding and margin attributes preserve their original values defined in layout and inset values are added to them. The library "auto-detects" the attrbitute to modify, which can be overridden by using `fitPadding`, `fitMargin` or `fitHeight` convenience functions.
 
-# Why
-Because we need more edge-to-edge Android apps.
-
 # Features
 * Easiness of use - padding, margin or height can be adjusted to any edge with a single line of code.
 * Convenient default parameters for common elements like recycler view, scroll view, floating actions button etc.
