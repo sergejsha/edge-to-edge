@@ -5,7 +5,6 @@
 In meanwhile, here is an Android library for enabling [edge-to-edge content](https://developer.android.com/guide/navigation/gesturenav) and insetting views using simple Kotlin DSL.
 
 # Getting Started
-
 1. Configure transparent colors of the status and navigation bars in `res/values/styles.xml` by extending a theme without the action bar like `Theme.MaterialComponents.Light.NoActionBar` or `Theme.Design.Light.NoActionBar` or similar.
 
 ```xml
@@ -40,8 +39,17 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 See sample app for more edge-to-edge examples.
 
-# How
+# Download
+```gradle
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'de.halfbit:edge-to-edge:<version>'
+}
+```
 
+# How
 The library is implemented around [WindowInsets](https://developer.android.com/reference/android/view/WindowInsets) class. Each time `WindowInsets` are dispatched through out the view hierarchy, the library fits views according to the declared fitting rules.
 
 Edge-to-Edge library fits each view to one or more device edges by modifying its `padding`, `margin` or `height` attribute with  the values taken from the current `WindowInsets`. Padding and margin attributes preserve their original values defined in layout and inset values are added to them. The library "auto-detects" the attrbitute to modify, which can be overridden by using `fitPadding`, `fitMargin` or `fitHeight` convenience functions.
@@ -52,15 +60,6 @@ Edge-to-Edge library fits each view to one or more device edges by modifying its
 * Ability to remove fitting rules, which comes handy when working with transitions in `ConstraintLayout`.
 * Demo app with edge-to-edge examples (any kind of contribution is welcome).
 
-# Download
-```gradle
-repositories {
-    mavenCentral()
-}
-dependencies {
-    implementation 'de.halfbit:edge-to-edge:<version>'
-}
-```
 
 # Similar libraries
 * [chrisbanes/insetter](https://github.com/chrisbanes/insetter)
