@@ -77,6 +77,14 @@ class EdgeToEdgeBuilder(
         }
     }
 
+    /** Same as [fit] but overrides default adjustment to [Adjustment.Height]. */
+    inline fun View.fitWidth(crossinline block: FittingBuilder.() -> Edge) {
+        fit {
+            adjustment = Adjustment.Width
+            block()
+        }
+    }
+
     /** Removes fitting rule for the view. */
     fun View.unfit() {
         edgeToEdge.fittings.remove(this)
@@ -96,6 +104,7 @@ class EdgeToEdgeBuilder(
                         Adjustment.Padding -> applyInsetsAsPadding(insets, view, edge.flags)
                         Adjustment.Margin -> applyInsetsAsMargin(insets, view, edge.flags)
                         Adjustment.Height -> applyInsetsAsHeight(insets, view, edge.flags)
+                        Adjustment.Width -> applyInsetsAsWidth(insets, view, edge.flags)
                     }
                 }
             }
@@ -142,7 +151,7 @@ sealed class Edge(
         CompositeEdge(this.flags + edge.flags)
 }
 
-enum class Adjustment { Padding, Margin, Height }
+enum class Adjustment { Padding, Margin, Height, Width }
 
 private data class Fitting(
     val view: WeakReference<View>,
@@ -245,6 +254,23 @@ private fun applyInsetsAsHeight(insets: WindowInsetsCompat, view: View, flags: I
         val layoutParams = view.layoutParams
         layoutParams.height = View.MeasureSpec.makeMeasureSpec(
             height, View.MeasureSpec.EXACTLY
+        )
+        view.layoutParams = layoutParams
+    }
+}
+
+private fun applyInsetsAsWidth(insets: WindowInsetsCompat, view: View, flags: Int) {
+    val width = when (flags) {
+        FLAG_LEFT -> insets.systemWindowInsetLeft
+        FLAG_TOP -> insets.systemWindowInsetTop
+        FLAG_RIGHT -> insets.systemWindowInsetRight
+        FLAG_BOTTOM -> insets.systemWindowInsetBottom
+        else -> error("Unexpected edge flags: $flags")
+    }
+    if (view.width != width) {
+        val layoutParams = view.layoutParams
+        layoutParams.width = View.MeasureSpec.makeMeasureSpec(
+            width, View.MeasureSpec.EXACTLY
         )
         view.layoutParams = layoutParams
     }
