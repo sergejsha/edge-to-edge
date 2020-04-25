@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="statusBar">@android:color/transparent</color>
-    <color name="navigationBar">@android:color/transparent</color>
+    <color name="navigationBar">#5f000000</color>
 </resources>
