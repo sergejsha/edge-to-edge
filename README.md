@@ -22,7 +22,7 @@ In meanwhile, here is an Android library for enabling [edge-to-edge content](htt
     <color name="navigationBar">@android:color/transparent</color>
 </resources>
 ```
-Note that fully transparent navigation bar can cause contrast issues to the navigation icons for API level `[23..29)`. Refer to the [Navigation Bar Transparency](https://github.com/beworker/edge-to-edge/wiki/Navigation-Bar-Transparency) wiki page for more details.
+☝️ Note that fully transparent navigation bar can cause contrast issues to the navigation icons for API level `[23..29)`. Refer to the [Navigation Bar Transparency](https://github.com/beworker/edge-to-edge/wiki/Navigation-Bar-Transparency) wiki page for more details.
 
 
 2. Remove `android:fitSystemWindows` attribute everywhere from layouts, if present.
