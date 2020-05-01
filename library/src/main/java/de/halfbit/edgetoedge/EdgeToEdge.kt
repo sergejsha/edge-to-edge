@@ -96,30 +96,20 @@ class EdgeToEdgeBuilder(
             window.setEdgeToEdgeFlags()
         }
 
-        rootView.onApplyWindowInsets { insets ->
-            for (fitting in edgeToEdge.fittings.values) {
-                val view = fitting.view.get() ?: continue
-                with(fitting) {
-                    when (adjustment) {
-                        Adjustment.Padding -> applyInsetsAsPadding(insets, view, edge.flags)
-                        Adjustment.Margin -> applyInsetsAsMargin(insets, view, edge.flags)
-                        Adjustment.Height -> applyInsetsAsHeight(insets, view, edge.flags)
-                        Adjustment.Width -> applyInsetsAsWidth(insets, view, edge.flags)
-                    }
-                }
-            }
-            insets
-        }
-    }
-
-    private inline fun View.onApplyWindowInsets(
-        crossinline block: (insets: WindowInsetsCompat) -> WindowInsetsCompat
-    ) {
         if (!edgeToEdge.listening) {
             edgeToEdge.listening = true
-            ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets -> block(insets) }
+            ViewCompat.setOnApplyWindowInsetsListener(rootView) { _, insets ->
+                WindowInsetsCompat(insets).let {
+                    edgeToEdge.insets = it
+                    edgeToEdge.applyFittings(it)
+                }
+                insets
+            }
         }
-        dispatchWindowInsets()
+
+        val currentInsets = edgeToEdge.insets
+        if (currentInsets == null) rootView.dispatchWindowInsets()
+        else edgeToEdge.applyFittings(currentInsets)
     }
 }
 
@@ -144,6 +134,12 @@ sealed class Edge(
 
     /** Shortcut for [Edge.Left] + [Edge.Top] + [Edge.Right] + [Edge.Bottom] */
     object All : Edge(FLAG_LEFT + FLAG_TOP + FLAG_RIGHT + FLAG_BOTTOM)
+
+    /** Shortcut for [Edge.Left] + [Edge.Top] + [Edge.Right] */
+    object TopArc : Edge(FLAG_LEFT + FLAG_TOP + FLAG_RIGHT)
+
+    /** Shortcut for [Edge.Left] + [Edge.Bottom] + [Edge.Right] */
+    object BottomArc : Edge(FLAG_LEFT + FLAG_BOTTOM + FLAG_RIGHT)
 
     internal class CompositeEdge(edges: Int) : Edge(edges)
 
@@ -170,7 +166,8 @@ private data class Fitting(
 
 private data class EdgeToEdge(
     val fittings: WeakHashMap<View, Fitting> = WeakHashMap(),
-    var listening: Boolean = false
+    var listening: Boolean = false,
+    var insets: WindowInsetsCompat? = null
 )
 
 internal fun View.dispatchWindowInsets() {
@@ -197,6 +194,20 @@ private fun View.verifyEdgeAdjustment(edge: Edge, adjustment: Adjustment) {
             "Height adjustment can only be applied to a single edge." +
                     " Actual edges: ${edges.substring(2)}, View: $this"
         )
+    }
+}
+
+private fun EdgeToEdge.applyFittings(insets: WindowInsetsCompat) {
+    for (fitting in fittings.values) {
+        val view = fitting.view.get() ?: continue
+        with(fitting) {
+            when (adjustment) {
+                Adjustment.Padding -> applyInsetsAsPadding(insets, view, edge.flags)
+                Adjustment.Margin -> applyInsetsAsMargin(insets, view, edge.flags)
+                Adjustment.Height -> applyInsetsAsHeight(insets, view, edge.flags)
+                Adjustment.Width -> applyInsetsAsWidth(insets, view, edge.flags)
+            }
+        }
     }
 }
 

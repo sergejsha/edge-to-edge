@@ -30,7 +30,7 @@ class ConstraintLayoutTransitionsFragment : BaseFragment() {
 
         edgeToEdge {
             tapToExtend.fitMargin { Edge.Bottom }
-            description.fit { Edge.Left + Edge.Bottom + Edge.Right }
+            description.fit { Edge.BottomArc }
         }
 
         tapToExtend.setOnClickListener {
