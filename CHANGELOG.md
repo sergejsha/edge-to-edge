@@ -1,5 +1,7 @@
-# 0.9 (unreleased)
-* New `Edge.All` shortcut edge.
+# 0.10 (02.05.2020)
+* New `Edge.All`, `Edge.TopArc` and `Edge.BottomArc` shortcuts.
+* New `view.fitWidth {}` adjustment block.
+* Fixed ignored fitting rules when used with `ConstraintLayout` transitions on some devices.
 
 # 0.8 (05.01.2020)
 * New `Edge.Left` and `Edge.Right` edges.

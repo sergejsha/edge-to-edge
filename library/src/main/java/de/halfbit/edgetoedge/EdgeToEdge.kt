@@ -77,7 +77,7 @@ class EdgeToEdgeBuilder(
         }
     }
 
-    /** Same as [fit] but overrides default adjustment to [Adjustment.Height]. */
+    /** Same as [fit] but overrides default adjustment to [Adjustment.Width]. */
     inline fun View.fitWidth(crossinline block: FittingBuilder.() -> Edge) {
         fit {
             adjustment = Adjustment.Width
