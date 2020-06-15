@@ -6,7 +6,7 @@ object Pom {
 
     const val group = "de.halfbit"
     const val artifactId = "edge-to-edge"
-    const val version = "0.10"
+    const val version = "1.0-rc1"
 
     object License {
         const val name = "The Apache License, Version 2.0"

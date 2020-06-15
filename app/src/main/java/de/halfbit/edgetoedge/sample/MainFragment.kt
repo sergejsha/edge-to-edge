@@ -1,5 +1,6 @@
 package de.halfbit.edgetoedge.sample
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,13 +23,20 @@ class MainFragment : BaseFragment() {
         }
 
         recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        recycler.adapter = MainAdapter { createFragment ->
-            requireActivity()
-                .supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, createFragment())
-                .addToBackStack(null)
-                .commit()
+        recycler.adapter = MainAdapter { onClick ->
+            when (onClick) {
+                is OnClick.CreateFragment -> {
+                    requireActivity()
+                        .supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, onClick.createFragment())
+                        .addToBackStack(null)
+                        .commit()
+                }
+                is OnClick.CreateActivity -> {
+                    startActivity(Intent(context, onClick.activity))
+                }
+            }
         }
     }
 }
