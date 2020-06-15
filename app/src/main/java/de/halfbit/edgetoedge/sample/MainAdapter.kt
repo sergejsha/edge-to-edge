@@ -14,34 +14,13 @@ class MainAdapter(
 ) : RecyclerView.Adapter<ItemViewHolder>() {
 
     private var items = listOf(
-        Item(
-            nameId = R.string.splash,
-            onClick = OnClick.CreateFragment { SplashScreenFragment() }
-        ),
-        Item(
-            nameId = R.string.toolbar,
-            onClick = OnClick.CreateFragment { ToolbarWithScrollableContentFragment() }
-        ),
-        Item(
-            nameId = R.string.toolbar_fab,
-            onClick = OnClick.CreateFragment { ToolbarWithScrollableContentAndFabFragment() }
-        ),
-        Item(
-            nameId = R.string.toolbar_viewpager,
-            onClick = OnClick.CreateFragment { ToolbarWithViewpagerFragment() }
-        ),
-        Item(
-            nameId = R.string.bottom_sheet_dialog,
-            onClick = OnClick.CreateFragment { BottomSheetDialogFragment() }
-        ),
-        Item(
-            nameId = R.string.constraint_layout_transitions,
-            onClick = OnClick.CreateFragment { ConstraintLayoutTransitionsFragment() }
-        ),
-        Item(
-            nameId = R.string.full_screen_activity,
-            onClick = OnClick.CreateActivity(FullScreenActivity::class.java)
-        )
+        Item(R.string.splash, OnClick.CreateFragment { SplashScreenFragment() }),
+        Item(R.string.toolbar,OnClick.CreateFragment { ToolbarWithScrollableContentFragment() }),
+        Item(R.string.toolbar_fab, OnClick.CreateFragment { ToolbarWithScrollableContentAndFabFragment() }),
+        Item(R.string.toolbar_viewpager, OnClick.CreateFragment { ToolbarWithViewpagerFragment() }),
+        Item(R.string.bottom_sheet_dialog, OnClick.CreateFragment { BottomSheetDialogFragment() }),
+        Item(R.string.constraint_layout_transitions, OnClick.CreateFragment { ConstraintLayoutTransitionsFragment() }),
+        Item(R.string.full_screen_activity, OnClick.CreateActivity(FullScreenActivity::class.java))
     )
 
     override fun getItemCount(): Int = items.size
