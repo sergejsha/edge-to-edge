@@ -1,3 +1,6 @@
+# 1.0-rc1 (15.06.2020)
+* Fixed "missing navigation bar shadow on Android 29" issue (#2) when edgeToEdge is applied to Activity or a bottom sheet Dialog.
+
 # 0.10 (02.05.2020)
 * New `Edge.All`, `Edge.TopArc` and `Edge.BottomArc` shortcuts.
 * New `view.fitWidth {}` adjustment block.
