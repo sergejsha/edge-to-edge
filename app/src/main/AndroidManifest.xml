@@ -15,11 +15,12 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".examples.FullScreenActivity" />
+        <activity android:name=".examples.issue4.Issue4Activity" />
+        <activity android:name=".examples.issue4.Issue4CoordinatorActivity" />
     </application>
 
 </manifest>

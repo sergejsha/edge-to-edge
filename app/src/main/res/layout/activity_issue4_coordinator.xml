@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.halfbit.edgetoedge.sample.examples.issue4.Issue4CoordinatorActivity">
+
+    <fragment
+        android:id="@+id/shared_fragment"
+        android:name="de.halfbit.edgetoedge.sample.examples.issue4.Issue4SharedFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

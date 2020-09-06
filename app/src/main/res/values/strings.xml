@@ -18,4 +18,5 @@
     <string name="full_screen_message">It is a full screen activity. This long message should not be covered by any of system bars.</string>
     <string name="tap_to_expand">Tap to expand</string>
     <string name="polar_light">An aurora (plural: auroras or aurorae),[a] sometimes referred to as polar lights, northern lights (aurora borealis), or southern lights (aurora australis), is a natural light display in the Earth\'s sky, predominantly seen in the high-latitude regions (around the Arctic and Antarctic).</string>
+    <string name="issue4">Issue 4</string>
 </resources>

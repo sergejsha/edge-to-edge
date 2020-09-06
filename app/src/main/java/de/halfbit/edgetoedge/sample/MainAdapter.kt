@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import de.halfbit.edgetoedge.sample.examples.*
+import de.halfbit.edgetoedge.sample.examples.issue4.Issue4LauncherFragment
 
 class MainAdapter(
     private val onClick: (OnClick) -> Unit
@@ -20,7 +21,8 @@ class MainAdapter(
         Item(R.string.toolbar_viewpager, OnClick.CreateFragment { ToolbarWithViewpagerFragment() }),
         Item(R.string.bottom_sheet_dialog, OnClick.CreateFragment { BottomSheetDialogFragment() }),
         Item(R.string.constraint_layout_transitions, OnClick.CreateFragment { ConstraintLayoutTransitionsFragment() }),
-        Item(R.string.full_screen_activity, OnClick.CreateActivity(FullScreenActivity::class.java))
+        Item(R.string.full_screen_activity, OnClick.CreateActivity(FullScreenActivity::class.java)),
+        Item(R.string.issue4, OnClick.CreateFragment { Issue4LauncherFragment() })
     )
 
     override fun getItemCount(): Int = items.size
