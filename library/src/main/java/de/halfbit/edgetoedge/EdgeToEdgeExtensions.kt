@@ -26,8 +26,9 @@ import androidx.fragment.app.Fragment
  * ```
  */
 inline fun Fragment.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
-    val window = requireNotNull(activity?.window) { "fragment's activity must be not null" }
-    EdgeToEdgeBuilder(requireView(), window).also(block).build()
+    requireActivity().let { activity ->
+        EdgeToEdgeBuilder(activity.requireContentView(), activity.window).also(block).build()
+    }
 }
 
 /**
@@ -46,9 +47,7 @@ inline fun Dialog.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
 }
 
 inline fun Activity.edgeToEdge(block: EdgeToEdgeBuilder.() -> Unit) {
-    val window = requireNotNull(window) { "Activity's window must be not null" }
-    val contentView = findViewById<View>(android.R.id.content)
-    EdgeToEdgeBuilder(contentView, window).also(block).build()
+    EdgeToEdgeBuilder(requireContentView(), window).also(block).build()
 }
 
 fun Window.setEdgeToEdgeFlags() {
@@ -58,3 +57,10 @@ fun Window.setEdgeToEdgeFlags() {
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 }
+
+@PublishedApi
+internal fun Activity.requireContentView(): View =
+    requireNotNull(findViewById(android.R.id.content)) {
+        "Cannot find android.R.id.content view in Activity. " +
+                "Please report the issue at https://github.com/beworker/edge-to-edge/issues"
+    }
