@@ -14,7 +14,7 @@ class Issue4SharedFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         edgeToEdge {
-            appbar.fit { Edge.TopArc }
+            container.fit { Edge.TopArc }
         }
     }
 }
